@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.ResultRow
 
 fun ResultRow.toUser() = User(
         email = this[Users.email],
+        password = this[Users.password],
         token = "",
         username = this[Users.username],
         bio = this[Users.bio],

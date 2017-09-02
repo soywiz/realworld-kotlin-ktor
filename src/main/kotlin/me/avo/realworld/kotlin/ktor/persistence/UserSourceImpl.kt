@@ -26,6 +26,10 @@ class UserSourceImpl : UserSource {
         }
     }
 
+    override fun updateUser(user: User): User {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     private fun Query.checkNull(): ResultRow = firstOrNull() ?: throw Exception("User not found")
 

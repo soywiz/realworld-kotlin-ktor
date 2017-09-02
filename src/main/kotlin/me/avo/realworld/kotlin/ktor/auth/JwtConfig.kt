@@ -22,7 +22,7 @@ object JwtConfig {
             .setSubject("Authentication")
             .setIssuer(issuer)
             .claim("email", email)
-            .setExpiration(getExpiration())
+            //.setExpiration(getExpiration())
             .signWith(SignatureAlgorithm.HS256, secret)
             .compact()
 

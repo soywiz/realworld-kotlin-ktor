@@ -9,4 +9,6 @@ interface UserSource {
 
     fun insertUser(details: RegistrationDetails)
 
+    fun updateUser(user: User): User
+
 }

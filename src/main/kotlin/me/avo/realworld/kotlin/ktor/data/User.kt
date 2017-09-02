@@ -4,6 +4,7 @@ import org.jetbrains.ktor.util.AttributeKey
 
 data class User(
         val email: String,
+        val password: String,
         val token: String,
         val username: String,
         val bio: String,

@@ -23,7 +23,7 @@ class LoginHandler {
         val hashed = BcryptHasher.hashPassword(password)
         db.insertUser(details.copy(password = hashed))
         val token = JwtConfig.makeToken(email)
-        return User(email, token, username, "", null)
+        return User(email, "", token, username, "", null)
     }
 
 }
