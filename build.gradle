@@ -32,6 +32,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url "http://dl.bintray.com/kotlin/ktor" }
+    maven { url "http://dl.bintray.com/kotlin/exposed" }
 }
 
 dependencies {
@@ -39,10 +40,14 @@ dependencies {
 
     compile group: "org.jetbrains.ktor", name: "ktor-core", version: ktor_version
     compile group: "org.jetbrains.ktor", name: "ktor-netty", version: ktor_version
+    compile "org.jetbrains.ktor:ktor-gson:$ktor_version"
 
     compile group: "io.jsonwebtoken", name: "jjwt", version: "0.7.0"
+    compile group: "org.mindrot", name: "jbcrypt", version: "0.4"
+    compile 'org.jetbrains.exposed:exposed:0.8.5'
+    compile 'org.mariadb.jdbc:mariadb-java-client:2.1.0'
 
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-RC3'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.0-RC2'
     testCompile group: 'org.amshove.kluent', name: 'kluent', version: '1.28'
     testCompile "org.jetbrains.ktor:ktor-test-host:$ktor_version"
 }
