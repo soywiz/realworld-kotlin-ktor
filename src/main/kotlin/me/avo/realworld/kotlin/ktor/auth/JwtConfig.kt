@@ -13,7 +13,8 @@ object JwtConfig {
     fun parse(token: String): String = Jwts.parser()
             .setSigningKey(secret)
             .parseClaimsJws(token)
-            .let { it.body["email"].toString() }
+            .body
+            .let { it["email"].toString() }
 
     /**
      * Produce a token for this combination of User and Account

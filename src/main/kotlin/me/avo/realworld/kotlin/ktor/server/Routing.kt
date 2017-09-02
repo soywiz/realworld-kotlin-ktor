@@ -35,19 +35,24 @@ fun Routing.setup() = route("api") {
 
     route("user") {
         intercept(ApplicationCallPipeline.Infrastructure) {
-            val token = call.request.header("Authorization") ?: throw Exception("Not Logged In")
+            val token = call.request.header("Authorization")?.removePrefix("Token ") ?: throw Exception("Not Logged In")
             val email = JwtConfig.parse(token)
-            call.attributes.put(User.key, email)
+            val user = userSource.findUser(email).copy(token = token)
+            call.attributes.put(User.key, user)
         }
 
         get {
-            val email = call.user
-            val user = userSource.findUser(email)
+            val (email, _, token) = call.user
+            val user = userSource.findUser(email).copy(token = token)
             call.respond(user)
         }
 
         put {
-            TODO("Update User")
+            val new = call.receive<User>()
+            val current = call.user
+            TODO("accept partial updates")
+            val updated = LoginHandler().updateUser(new, current)
+            call.respond(updated)
         }
     }
 

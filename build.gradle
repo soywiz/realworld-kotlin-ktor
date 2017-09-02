@@ -45,6 +45,7 @@ dependencies {
     compile group: "io.jsonwebtoken", name: "jjwt", version: "0.7.0"
     compile group: "org.mindrot", name: "jbcrypt", version: "0.4"
     compile 'org.jetbrains.exposed:exposed:0.8.5'
+    compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile 'org.mariadb.jdbc:mariadb-java-client:2.1.0'
     compile group: "org.slf4j", name: "slf4j-simple", version: "1.7.25"
 

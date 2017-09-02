@@ -4,9 +4,9 @@ import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import me.avo.realworld.kotlin.ktor.data.User
 
-class ExclusionStrat : ExclusionStrategy {
+class SerialStrategy : ExclusionStrategy {
 
-    override fun shouldSkipClass(clazz: Class<*>?): Boolean {
+    override fun shouldSkipClass(clazz: Class<*>): Boolean {
         return false
     }
 

@@ -2,10 +2,7 @@ package me.avo.realworld.kotlin.ktor.persistence
 
 import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.data.User
-import org.jetbrains.exposed.sql.Query
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserSourceImpl : UserSource {
@@ -26,8 +23,14 @@ class UserSourceImpl : UserSource {
         }
     }
 
-    override fun updateUser(user: User): User {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun updateUser(new: User, current: User): Unit = transaction {
+        Users.update({ Users.email eq current.email }) {
+            it[Users.email] = new.email
+            it[Users.username] = new.username
+            it[Users.password] = new.password // TODO hash
+            it[Users.bio] = new.bio
+            it[Users.image] = new.image
+        }
     }
 
 

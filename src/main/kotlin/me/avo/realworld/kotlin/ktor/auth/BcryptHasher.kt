@@ -1,5 +1,6 @@
 package me.avo.realworld.kotlin.ktor.auth
 
+import me.avo.realworld.kotlin.ktor.data.User
 import org.mindrot.jbcrypt.BCrypt
 
 object BcryptHasher {
@@ -7,7 +8,7 @@ object BcryptHasher {
     /**
      * Check if the password matches the User's password
      */
-    fun checkPassword(attempt: String, correct: String) = if (BCrypt.checkpw(attempt, correct)) Unit
+    fun checkPassword(attempt: String, user: User) = if (BCrypt.checkpw(attempt, user.password)) Unit
     else throw Exception("Wrong Password")
 
     /**

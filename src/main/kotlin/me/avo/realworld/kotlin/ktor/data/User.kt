@@ -13,7 +13,7 @@ data class User(
 
     companion object {
 
-        val key = AttributeKey<String>("user")
+        val key = AttributeKey<User>("user")
 
     }
 
