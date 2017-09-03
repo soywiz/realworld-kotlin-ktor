@@ -13,19 +13,21 @@ class LoginHandler {
     fun login(credentials: LoginCredentials): User = credentials.let { (email, password) ->
         val user = db.findUser(email)
         BcryptHasher.checkPassword(password, user)
-        val token = JwtConfig.makeToken(email)
+        val token = JwtConfig.makeToken(user)
         return user.copy(token = token)
     }
 
     fun register(details: RegistrationDetails): User = details.let { (username, email, password) ->
         val hashed = BcryptHasher.hashPassword(password)
-        db.insertUser(details.copy(password = hashed))
-        val token = JwtConfig.makeToken(email)
-        return User(email, "", token, username, "", null)
+        val id = db.insertUser(details.copy(password = hashed))
+        return User(id, email, "", "", username, "", null).run {
+            copy(token = JwtConfig.makeToken(this))
+        }
     }
 
-    fun updateUser(new: User, current: User): User = new
-            .copy(password = BcryptHasher.hashPassword(new.password), token = current.token)
-            .also { db.updateUser(it, current) }
+    fun updateUser(new: User, current: User): User {
+        val final = if (new.password != null) new.copy(password = BcryptHasher.hashPassword(new.password)) else new
+        return db.updateUser(final, current)
+    }
 
 }

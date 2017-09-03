@@ -7,8 +7,8 @@ interface UserSource {
 
     fun findUser(email: String) : User
 
-    fun insertUser(details: RegistrationDetails)
+    fun insertUser(details: RegistrationDetails): Int
 
-    fun updateUser(new: User, current: User)
+    fun updateUser(new: User, current: User): User
 
 }

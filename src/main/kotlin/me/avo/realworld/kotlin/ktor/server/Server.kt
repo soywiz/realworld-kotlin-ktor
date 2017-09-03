@@ -1,12 +1,7 @@
 package me.avo.realworld.kotlin.ktor.server
 
-import me.avo.realworld.kotlin.ktor.data.Article
-import me.avo.realworld.kotlin.ktor.data.LoginCredentials
-import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
-import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.data.*
 import me.avo.realworld.kotlin.ktor.persistence.Setup
-import me.avo.realworld.kotlin.ktor.util.serialization.DeserialStrategy
-import me.avo.realworld.kotlin.ktor.util.serialization.SerialStrategy
 import me.avo.realworld.kotlin.ktor.util.serialization.register
 import org.jetbrains.ktor.application.install
 import org.jetbrains.ktor.features.CallLogging
@@ -24,10 +19,12 @@ fun startServer() = embeddedServer(Netty, 5000) {
     install(CallLogging)
     install(DefaultHeaders)
     install(GsonSupport) {
+        serializeNulls()
         register<LoginCredentials>()
         register<RegistrationDetails>()
         register<User>()
         register<Article>()
+        register<Profile>()
     }
 
     install(StatusPages) {

@@ -2,14 +2,29 @@ package me.avo.realworld.kotlin.ktor.persistence
 
 import org.jetbrains.exposed.sql.Table
 
-val tables = arrayOf(Users)
+val tables = arrayOf(Users, Following)
 
 object Users : Table("users") {
 
-    val email = varchar("email", 254).primaryKey()
+    val id = integer("id").primaryKey().autoIncrement()
+    val email = varchar("email", 254)
     val password = varchar("password", 255)
     val username = varchar("name", 50)
     val bio = varchar("bio", 255)
     val image = varchar("image", 255).nullable()
+
+}
+
+
+object Following: Table("following") {
+    val sourceId = integer("source_id").primaryKey() references Users.id
+    val targetId = integer("target_id").primaryKey() references Users.id
+}
+
+object Articles : Table("articles") {
+    val slug = varchar("slug", 255)
+    val title = varchar("title", 255)
+    val description = varchar("description", 255)
+    val body = text("body")
 
 }

@@ -2,6 +2,7 @@ package me.avo.realworld.kotlin.ktor.auth
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import me.avo.realworld.kotlin.ktor.data.User
 import java.util.*
 
 object JwtConfig {
@@ -19,10 +20,11 @@ object JwtConfig {
     /**
      * Produce a token for this combination of User and Account
      */
-    fun makeToken(email: String): String = Jwts.builder()
+    fun makeToken(user: User): String = Jwts.builder()
             .setSubject("Authentication")
             .setIssuer(issuer)
-            .claim("email", email)
+            .claim("id", user.id)
+            .claim("email", user.email)
             //.setExpiration(getExpiration())
             .signWith(SignatureAlgorithm.HS256, secret)
             .compact()

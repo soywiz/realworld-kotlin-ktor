@@ -11,7 +11,7 @@ class SerialStrategy : ExclusionStrategy {
     }
 
     override fun shouldSkipField(f: FieldAttributes): Boolean = when (f.declaringClass) {
-        User::class.java -> f.name == User::password.name
+        User::class.java -> f.name in listOf(User::password.name, User::id.name)
         else -> false
     }
 

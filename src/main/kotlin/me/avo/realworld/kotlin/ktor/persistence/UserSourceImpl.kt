@@ -3,34 +3,41 @@ package me.avo.realworld.kotlin.ktor.persistence
 import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.data.User
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserSourceImpl : UserSource {
 
-    override fun findUser(email: String): User = transaction {
-        Users.select { Users.email eq email }
+    override fun findUser(email: String): User = findUser(userByEmail(email))
+
+    fun findUser(where: Op<Boolean>) = transaction {
+        Users.select(where)
                 .checkNull()
                 .let(ResultRow::toUser)
     }
 
-    override fun insertUser(details: RegistrationDetails): Unit = transaction {
+    private fun userById(id: Int): Op<Boolean> = Users.id eq id
+    private fun userByEmail(email: String): Op<Boolean> = Users.email eq email
+
+    override fun insertUser(details: RegistrationDetails): Int = transaction {
         Users.insert {
             it[Users.email] = details.email
             it[Users.password] = details.password
             it[Users.username] = details.username
             it[Users.bio] = ""
             it[Users.image] = null
-        }
+        } get Users.id
     }
 
-    override fun updateUser(new: User, current: User): Unit = transaction {
-        Users.update({ Users.email eq current.email }) {
-            it[Users.email] = new.email
-            it[Users.username] = new.username
-            it[Users.password] = new.password // TODO hash
-            it[Users.bio] = new.bio
+    override fun updateUser(new: User, current: User): User = transaction {
+        Users.update({ Users.id eq current.id }) {
+            if (new.email != null) it[Users.email] = new.email
+            if (new.username != null) it[Users.username] = new.username
+            if (new.password != null) it[Users.password] = new.password
+            if (new.bio != null) it[Users.bio] = new.bio
             it[Users.image] = new.image
         }
+        findUser(userById(current.id)).copy(token = current.token)
     }
 
 

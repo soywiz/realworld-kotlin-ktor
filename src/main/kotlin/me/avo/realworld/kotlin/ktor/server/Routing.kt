@@ -1,21 +1,25 @@
 package me.avo.realworld.kotlin.ktor.server
 
-import me.avo.realworld.kotlin.ktor.auth.JwtConfig
 import me.avo.realworld.kotlin.ktor.auth.LoginHandler
 import me.avo.realworld.kotlin.ktor.data.LoginCredentials
 import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.persistence.ProfileSource
+import me.avo.realworld.kotlin.ktor.persistence.ProfileSourceImpl
 import me.avo.realworld.kotlin.ktor.persistence.UserSource
 import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
 import me.avo.realworld.kotlin.ktor.util.user
 import org.jetbrains.ktor.application.ApplicationCallPipeline
-import org.jetbrains.ktor.request.header
 import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.respond
 import org.jetbrains.ktor.routing.*
 
 fun Routing.setup() = route("api") {
     val userSource: UserSource = UserSourceImpl()
+
+    intercept(ApplicationCallPipeline.Infrastructure) {
+        jwtAuth(userSource)
+    }
 
     route("users") {
 
@@ -34,34 +38,31 @@ fun Routing.setup() = route("api") {
 
 
     route("user") {
-        intercept(ApplicationCallPipeline.Infrastructure) {
-            val token = call.request.header("Authorization")?.removePrefix("Token ") ?: throw Exception("Not Logged In")
-            val email = JwtConfig.parse(token)
-            val user = userSource.findUser(email).copy(token = token)
-            call.attributes.put(User.key, user)
-        }
 
         get {
-            val (email, _, token) = call.user
+            val (_, email, _, token) = requireLogin()
             val user = userSource.findUser(email).copy(token = token)
             call.respond(user)
         }
 
         put {
+            val current = requireLogin()
             val new = call.receive<User>()
-            val current = call.user
-            TODO("accept partial updates")
             val updated = LoginHandler().updateUser(new, current)
             call.respond(updated)
         }
     }
 
     route("profiles") {
+        val profileSource: ProfileSource = ProfileSourceImpl()
 
         route("{username}") {
 
             get {
-                TODO("Get Profile")
+                val user = optionalLogin()
+                val username = call.parameters["username"]!!
+                val profile = profileSource.getProfile(username, user?.id)
+                call.respond(profile)
             }
 
             post("follow") {
