@@ -9,6 +9,7 @@ import me.avo.realworld.kotlin.ktor.persistence.ProfileSourceImpl
 import me.avo.realworld.kotlin.ktor.persistence.UserSource
 import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
 import me.avo.realworld.kotlin.ktor.util.user
+import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.respond
@@ -57,20 +58,24 @@ fun Routing.setup() = route("api") {
         val profileSource: ProfileSource = ProfileSourceImpl()
 
         route("{username}") {
+            fun ApplicationCall.getUsername() = parameters["username"]!!
 
             get {
                 val user = optionalLogin()
-                val username = call.parameters["username"]!!
-                val profile = profileSource.getProfile(username, user?.id)
+                val profile = profileSource.getProfile(call.getUsername(), user?.id)
                 call.respond(profile)
             }
 
             post("follow") {
-                TODO("Follow User")
+                val user = requireLogin()
+                val profile = profileSource.follow(user.id, call.getUsername())
+                call.respond(profile)
             }
 
             delete("follow") {
-                TODO("Unfollow User")
+                val user = requireLogin()
+                val profile = profileSource.unfollow(user.id, call.getUsername())
+                call.respond(profile)
             }
 
         }

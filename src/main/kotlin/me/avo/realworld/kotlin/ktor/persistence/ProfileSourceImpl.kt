@@ -19,18 +19,26 @@ class ProfileSourceImpl : ProfileSource {
         Following.select { Following.sourceId eq source and (Following.targetId eq target) }.let { !it.empty() }
     }
 
-    override fun follow(username: String, currentId: Int): Profile = transaction {
-        val target = Users.slice(Users.id).select { Users.username eq username }.let { it.firstOrNull()?.get(Users.id) }
-                ?: throw Exception("Couldn't follow User with name $username")
+    override fun follow(currentId: Int, username: String): Profile = transaction {
+        val targetId = getTargetId(username)
         Following.insert {
-            it[sourceId] = currentId
-            it[targetId] = target
+            it[Following.sourceId] = currentId
+            it[Following.targetId] = targetId
         }
         getProfile(username, currentId)
     }
 
-    override fun unfollow(username: String, currentId: Int): Profile {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun unfollow(currentId: Int, username: String): Profile = transaction {
+        val targetId = getTargetId(username)
+        Following.deleteWhere { Following.sourceId eq currentId and (Following.targetId eq targetId) }
+        getProfile(username, currentId)
+    }
+
+    fun getTargetId(username: String) = transaction {
+        Users.slice(Users.id)
+                .select { Users.username eq username }
+                .let { it.firstOrNull()?.get(Users.id) }
+                ?: throw Exception("Couldn't follow User with name $username")
     }
 
     private fun Query.checkNull(): ResultRow = firstOrNull() ?: throw Exception("Profile not found")

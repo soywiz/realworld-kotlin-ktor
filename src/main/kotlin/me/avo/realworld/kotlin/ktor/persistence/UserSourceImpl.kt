@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserSourceImpl : UserSource {
 
-    override fun findUser(email: String): User = findUser(userByEmail(email))
+    override fun findUser(email: String): User = findUser(byEmail(email))
 
     fun findUser(where: Op<Boolean>) = transaction {
         Users.select(where)
@@ -16,8 +16,8 @@ class UserSourceImpl : UserSource {
                 .let(ResultRow::toUser)
     }
 
-    private fun userById(id: Int): Op<Boolean> = Users.id eq id
-    private fun userByEmail(email: String): Op<Boolean> = Users.email eq email
+    private fun byId(id: Int): Op<Boolean> = Users.id eq id
+    private fun byEmail(email: String): Op<Boolean> = Users.email eq email
 
     override fun insertUser(details: RegistrationDetails): Int = transaction {
         Users.insert {
@@ -37,7 +37,7 @@ class UserSourceImpl : UserSource {
             if (new.bio != null) it[Users.bio] = new.bio
             it[Users.image] = new.image
         }
-        findUser(userById(current.id)).copy(token = current.token)
+        findUser(byId(current.id)).copy(token = current.token)
     }
 
 
