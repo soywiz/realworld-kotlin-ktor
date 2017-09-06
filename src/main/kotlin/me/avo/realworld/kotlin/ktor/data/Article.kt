@@ -11,6 +11,6 @@ data class Article(
         val createdAt: Date,
         val updatedAt: Date,
         val favorited: Boolean,
-        val favoritesCount: Int
-// TODO author
+        val favoritesCount: Int,
+        val author: Profile
 )

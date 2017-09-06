@@ -6,6 +6,6 @@ data class Comment(
         val id: Int,
         val createdAt: Date,
         val updatedAt: Date,
-        val body: String
-// TODO Author
+        val body: String,
+        val author: Profile
 )

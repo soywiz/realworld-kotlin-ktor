@@ -1,13 +1,11 @@
 package me.avo.realworld.kotlin.ktor.server
 
 import me.avo.realworld.kotlin.ktor.auth.LoginHandler
+import me.avo.realworld.kotlin.ktor.data.ArticleQuery
 import me.avo.realworld.kotlin.ktor.data.LoginCredentials
 import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.data.User
-import me.avo.realworld.kotlin.ktor.persistence.ProfileSource
-import me.avo.realworld.kotlin.ktor.persistence.ProfileSourceImpl
-import me.avo.realworld.kotlin.ktor.persistence.UserSource
-import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
+import me.avo.realworld.kotlin.ktor.persistence.*
 import me.avo.realworld.kotlin.ktor.util.user
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.application.ApplicationCallPipeline
@@ -83,12 +81,17 @@ fun Routing.setup() = route("api") {
     }
 
     route("articles") {
+        val articleSource: ArticleSource = ArticleSourceImpl()
 
         get {
-            TODO("Get articles")
+            val user = optionalLogin()
+            val query = ArticleQuery.fromParameter(call.parameters)
+            val articles = articleSource.getArticles(query)
+            call.respond(articles)
         }
 
         get("feed") {
+            val user = requireLogin()
             TODO("Feed Articles")
         }
 

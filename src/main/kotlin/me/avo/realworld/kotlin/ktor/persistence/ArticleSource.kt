@@ -1,11 +1,12 @@
 package me.avo.realworld.kotlin.ktor.persistence
 
 import me.avo.realworld.kotlin.ktor.data.Article
+import me.avo.realworld.kotlin.ktor.data.ArticleQuery
 import me.avo.realworld.kotlin.ktor.data.Comment
 
 interface ArticleSource {
 
-    fun getArticles(): List<Article>
+    fun getArticles(query: ArticleQuery): List<Article>
 
     fun getFeed(): List<Article>
 
