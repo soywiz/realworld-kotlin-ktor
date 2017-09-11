@@ -2,14 +2,14 @@ package me.avo.realworld.kotlin.ktor
 
 import me.avo.realworld.kotlin.ktor.auth.BcryptHasher
 import me.avo.realworld.kotlin.ktor.auth.LoginHandler
+import me.avo.realworld.kotlin.ktor.data.Article
+import me.avo.realworld.kotlin.ktor.data.Profile
 import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.data.User
-import me.avo.realworld.kotlin.ktor.persistence.ProfileSourceImpl
-import me.avo.realworld.kotlin.ktor.persistence.Setup
-import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
-import me.avo.realworld.kotlin.ktor.persistence.tables
+import me.avo.realworld.kotlin.ktor.persistence.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -38,6 +38,10 @@ fun RegistrationDetails.insert() {
     availableMap.put(this, id)
 }
 
+fun Article.insert() {
+    //ArticleSourceImpl().insertArticle()
+}
+
 infix fun RegistrationDetails.follow(target: RegistrationDetails) {
     val sourceId = availableMap[this]!!
     ProfileSourceImpl().follow(sourceId, target.username)
@@ -55,3 +59,7 @@ val followTarget = RegistrationDetails("leader", "live@rare.com", hashedTestPass
 
 val availableUsers = listOf(details, otherDetails, followSource, followTarget)
 val availableMap = mutableMapOf<RegistrationDetails, Int>()
+
+// Articles
+val artOne = Article(0, "Test", "Test", "This is just a test", "Only a test but wow!",
+        listOf("test"), DateTime(), DateTime(), false, 0, Profile("", "", null, false))

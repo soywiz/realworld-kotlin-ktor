@@ -1,12 +1,8 @@
 package me.avo.realworld.kotlin.ktor.server
 
 import me.avo.realworld.kotlin.ktor.auth.LoginHandler
-import me.avo.realworld.kotlin.ktor.data.ArticleQuery
-import me.avo.realworld.kotlin.ktor.data.LoginCredentials
-import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
-import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.data.*
 import me.avo.realworld.kotlin.ktor.persistence.*
-import me.avo.realworld.kotlin.ktor.util.user
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.request.receive
@@ -97,7 +93,12 @@ fun Routing.setup() = route("api") {
 
 
         post {
-            TODO("Create Article")
+            val user = requireLogin()
+            val details = call.receive<Article>().let {
+                ArticleDetails(it.title, it.description, it.body, it.tagList)
+            }
+            val article = articleSource.insertArticle(user, details)
+            call.respond(article)
         }
 
         route("{slug}") {
@@ -107,23 +108,28 @@ fun Routing.setup() = route("api") {
             }
 
             put {
+                requireLogin()
                 TODO("Update Article")
             }
 
             delete {
+                requireLogin()
                 TODO("Delete Article")
             }
 
             route("comments") {
                 post {
+                    requireLogin()
                     TODO("Add Comments to an Article")
                 }
 
                 get {
+                    optionalLogin()
                     TODO("Get Comments from an Article")
                 }
 
                 delete("{id}") {
+                    requireLogin()
                     TODO("Delete Comment")
                 }
 
@@ -131,16 +137,17 @@ fun Routing.setup() = route("api") {
 
             route("favorite") {
                 post {
+                    requireLogin()
                     TODO("Favorite Article")
                 }
 
                 delete {
+                    requireLogin()
                     TODO("Unfavorite Article")
                 }
             }
 
         }
-
 
     }
 

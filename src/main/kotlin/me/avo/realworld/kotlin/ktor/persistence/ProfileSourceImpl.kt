@@ -16,7 +16,8 @@ class ProfileSourceImpl : ProfileSource {
     }
 
     fun isFollowing(source: Int, target: Int): Boolean = transaction {
-        Following.select { Following.sourceId eq source and (Following.targetId eq target) }.let { !it.empty() }
+        Following.select { Following.sourceId eq source and (Following.targetId eq target) }
+                .let { !it.empty() }
     }
 
     override fun follow(currentId: Int, username: String): Profile = transaction {

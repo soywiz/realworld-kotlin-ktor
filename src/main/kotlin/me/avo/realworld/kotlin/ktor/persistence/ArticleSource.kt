@@ -1,8 +1,6 @@
 package me.avo.realworld.kotlin.ktor.persistence
 
-import me.avo.realworld.kotlin.ktor.data.Article
-import me.avo.realworld.kotlin.ktor.data.ArticleQuery
-import me.avo.realworld.kotlin.ktor.data.Comment
+import me.avo.realworld.kotlin.ktor.data.*
 
 interface ArticleSource {
 
@@ -12,7 +10,7 @@ interface ArticleSource {
 
     fun getArticle(slug: String): Article
 
-    fun insertArticle(): Article
+    fun insertArticle(user: User, details: ArticleDetails): Article
 
     fun updateArticle(): Article
 
