@@ -1,11 +1,9 @@
 package me.avo.realworld.kotlin.ktor.persistence
 
-import me.avo.realworld.kotlin.ktor.data.Article
-import me.avo.realworld.kotlin.ktor.data.ArticleQuery
-import me.avo.realworld.kotlin.ktor.data.Comment
-import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.data.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 
 class ArticleSourceImpl : ArticleSource {
 
@@ -40,8 +38,29 @@ class ArticleSourceImpl : ArticleSource {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun insertArticle(user: User): Article {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun insertArticle(user: User, details: ArticleDetails): Article = transaction {
+        val (title, description, body, tagList, slug, createdAt, updatedAt) = details
+        val id = Articles.insert {
+            it[Articles.slug] = slug
+            it[Articles.title] = title
+            it[Articles.description] = description
+            it[Articles.body] = body
+            it[Articles.createdAt] = createdAt
+            it[Articles.updatedAt] = updatedAt
+        } get Articles.id
+
+        insertTags(id, tagList)
+        Article(id, slug, title, description, body, tagList, createdAt, updatedAt, false, 0, TODO())
+    }
+
+    fun insertTags(articleId: Int, tags: List<String>) = transaction {
+        tags.forEach { tag ->
+            Tags.insert {
+                it[Tags.articleId] = articleId
+                it[Tags.tag] = tag
+            }
+        }
+
     }
 
     override fun updateArticle(): Article {
@@ -72,12 +91,14 @@ class ArticleSourceImpl : ArticleSource {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getTags(): List<String> {
+    override fun getFeed(): List<Article> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getFeed(): List<Article> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getTags() = transaction {
+        Tags.slice(Tags.tag)
+                .selectAll()
+                .map { it[Tags.tag] }
     }
 
 }

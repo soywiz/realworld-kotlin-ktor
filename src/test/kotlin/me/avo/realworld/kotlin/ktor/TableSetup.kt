@@ -63,3 +63,6 @@ val availableMap = mutableMapOf<RegistrationDetails, Int>()
 // Articles
 val artOne = Article(0, "Test", "Test", "This is just a test", "Only a test but wow!",
         listOf("test"), DateTime(), DateTime(), false, 0, Profile("", "", null, false))
+
+// Tags
+val availableTags = listOf("Some", "Tags", "Are", "Already", "here")

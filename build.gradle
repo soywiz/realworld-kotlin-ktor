@@ -41,6 +41,7 @@ dependencies {
     compile group: "org.jetbrains.ktor", name: "ktor-core", version: ktor_version
     compile group: "org.jetbrains.ktor", name: "ktor-netty", version: ktor_version
     compile "org.jetbrains.ktor:ktor-gson:$ktor_version"
+    compile "org.jetbrains.ktor:ktor-locations:$ktor_version"
 
     compile group: "io.jsonwebtoken", name: "jjwt", version: "0.7.0"
     compile group: "org.mindrot", name: "jbcrypt", version: "0.4"
