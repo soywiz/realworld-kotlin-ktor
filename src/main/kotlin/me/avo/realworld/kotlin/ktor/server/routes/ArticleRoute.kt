@@ -1,7 +1,6 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
 import me.avo.realworld.kotlin.ktor.data.Article
-import me.avo.realworld.kotlin.ktor.data.ArticleDetails
 import me.avo.realworld.kotlin.ktor.data.ArticleQuery
 import me.avo.realworld.kotlin.ktor.persistence.ArticleSource
 import me.avo.realworld.kotlin.ktor.persistence.ArticleSourceImpl
@@ -29,9 +28,7 @@ fun Route.article() = route("articles") {
 
     post {
         val user = requireLogin()
-        val details = call.receive<Article>().let {
-            ArticleDetails(it.title, it.description, it.body, it.tagList)
-        }
+        val details = call.receive<Article>()
         val article = articleSource.insertArticle(user, details)
         call.respond(article)
     }
@@ -39,28 +36,28 @@ fun Route.article() = route("articles") {
     route("{slug}") {
 
         get {
-            TODO("Get Article")
+            TODO("Get ArticleDetails")
         }
 
         put {
             requireLogin()
-            TODO("Update Article")
+            TODO("Update ArticleDetails")
         }
 
         delete {
             requireLogin()
-            TODO("Delete Article")
+            TODO("Delete ArticleDetails")
         }
 
         route("comments") {
             post {
                 requireLogin()
-                TODO("Add Comments to an Article")
+                TODO("Add Comments to an ArticleDetails")
             }
 
             get {
                 optionalLogin()
-                TODO("Get Comments from an Article")
+                TODO("Get Comments from an ArticleDetails")
             }
 
             delete("{id}") {
@@ -73,12 +70,12 @@ fun Route.article() = route("articles") {
         route("favorite") {
             post {
                 requireLogin()
-                TODO("Favorite Article")
+                TODO("Favorite ArticleDetails")
             }
 
             delete {
                 requireLogin()
-                TODO("Unfavorite Article")
+                TODO("Unfavorite ArticleDetails")
             }
         }
 

@@ -1,13 +1,10 @@
 package me.avo.realworld.kotlin.ktor
 
 import me.avo.realworld.kotlin.ktor.auth.BcryptHasher
-import me.avo.realworld.kotlin.ktor.auth.LoginHandler
-import me.avo.realworld.kotlin.ktor.data.Article
-import me.avo.realworld.kotlin.ktor.data.Profile
-import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
-import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.data.*
 import me.avo.realworld.kotlin.ktor.persistence.*
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Disabled
@@ -18,6 +15,7 @@ class TableSetup {
 
     @Test
     fun setup() {
+
         setupEnvironment()
     }
 
@@ -30,7 +28,17 @@ fun setupEnvironment() {
         SchemaUtils.create(*tables)
         availableUsers.forEach(RegistrationDetails::insert)
         followSource follow followTarget
+
+        val user = UserSourceImpl().findUser("some@other.com")
+
+        availableArticles.forEach{
+            ArticleSourceImpl().insertArticle(user,it)
+        }
+
+
     }
+
+
 }
 
 fun RegistrationDetails.insert() {
@@ -38,7 +46,7 @@ fun RegistrationDetails.insert() {
     availableMap.put(this, id)
 }
 
-fun Article.insert() {
+fun ArticleDetails.insert() {
     //ArticleSourceImpl().insertArticle()
 }
 
@@ -59,10 +67,15 @@ val followTarget = RegistrationDetails("leader", "live@rare.com", hashedTestPass
 
 val availableUsers = listOf(details, otherDetails, followSource, followTarget)
 val availableMap = mutableMapOf<RegistrationDetails, Int>()
-
 // Articles
-val artOne = Article(0, "Test", "Test", "This is just a test", "Only a test but wow!",
-        listOf("test"), DateTime(), DateTime(), false, 0, Profile("", "", null, false))
+
+
+val artOne = Article("titletest","description test","body test",listOf("tag1"), "test1",DateTime(), DateTime())
+val artTwo = Article("titletest1","description test","body test",listOf("tag2"), "test2",DateTime(), DateTime())
+val artThree = Article("titletest2","description test","body test",listOf("tag3"), "test3",DateTime(), DateTime())
+
+val availableArticles = listOf(artOne, artTwo, artThree)
+
 
 // Tags
-val availableTags = listOf("Some", "Tags", "Are", "Already", "here")
+val availableTags = listOf("tag1","tag2","tag3")

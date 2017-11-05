@@ -4,17 +4,17 @@ import me.avo.realworld.kotlin.ktor.data.*
 
 interface ArticleSource {
 
-    fun getArticles(query: ArticleQuery): List<Article>
+    fun getArticles(query: ArticleQuery): List<ArticleDetails>
 
-    fun getFeed(): List<Article>
+    fun getFeed(): List<ArticleDetails>
 
-    fun getArticle(slug: String): Article
+    fun getArticle(slug: String): ArticleDetails
 
-    fun insertArticle(user: User, details: ArticleDetails): Article
+    fun insertArticle(user: User, details11: Article)
 
-    fun updateArticle(): Article
+    fun updateArticle(articleDetails: ArticleDetails): ArticleDetails?
 
-    fun deleteArticle()
+    fun deleteArticle(articleId: Int)
 
     fun addComment(comment: Comment): Comment
 
@@ -22,9 +22,9 @@ interface ArticleSource {
 
     fun deleteComment(slug: String, id: String)
 
-    fun favorite(slug: String): Article
+    fun favorite(slug: String): ArticleDetails
 
-    fun unfavorite(slug: String): Article
+    fun unfavorite(slug: String): ArticleDetails
 
     fun getTags(): List<String>
 

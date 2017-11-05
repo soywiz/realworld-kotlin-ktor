@@ -16,8 +16,8 @@ class UserSourceImpl : UserSource {
                 .let(ResultRow::toUser)
     }
 
-    private fun byId(id: Int): Op<Boolean> = Users.id eq id
-    private fun byEmail(email: String): Op<Boolean> = Users.email eq email
+     fun byId(id: Int): Op<Boolean> = Users.id eq id
+     fun byEmail(email: String): Op<Boolean> = Users.email eq email
 
     override fun insertUser(details: RegistrationDetails): Int = transaction {
         Users.insert {
