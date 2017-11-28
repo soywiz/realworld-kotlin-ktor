@@ -1,14 +1,13 @@
 package me.avo.realworld.kotlin.ktor.auth
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
-import me.avo.realworld.kotlin.ktor.data.User
+import io.jsonwebtoken.*
+import me.avo.realworld.kotlin.ktor.data.*
 import java.util.*
 
 object JwtConfig {
 
-    private const val secret = "rumRaisin1994kyoukoChan"
-    private const val issuer = "aPureBase.com"
+    private const val secret = "xE1x1o1x8qflc1iYtcRd"
+    private const val issuer = "thinkster.io"
     private const val validityInMs = 36_000_000 // 10 hours
 
     fun parse(token: String): String = Jwts.parser()
@@ -33,6 +32,5 @@ object JwtConfig {
      * Calculate the expiration Date based on current time + the given validity
      */
     private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)
-
 
 }
