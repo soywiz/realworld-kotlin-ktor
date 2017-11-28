@@ -27,7 +27,7 @@ fun Routing.setup() = route("api") {
 
     val tagSource: TagSource = TagSourceImpl()
     get("tags") {
-        val tags = tagSource.getAll()
+        val tags = tagSource.getAllTags()
         call.respond(tags)
     }
 }

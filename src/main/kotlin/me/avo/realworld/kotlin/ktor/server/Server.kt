@@ -28,7 +28,7 @@ fun startServer() = embeddedServer(Netty, 5000) {
         register<LoginCredentials>()
         register<RegistrationDetails>()
         register<User>()
-        register<Article>()
+        register<ArticleDetails>()
         register<Profile>()
     }
 

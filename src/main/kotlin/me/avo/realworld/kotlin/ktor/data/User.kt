@@ -12,10 +12,11 @@ data class User(
         val image: String?
 ) {
 
+    fun getProfile() = Profile(username,bio,image,false)
+
     companion object {
 
         val key = AttributeKey<User>("user")
-
     }
 
 }

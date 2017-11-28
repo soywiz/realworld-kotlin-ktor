@@ -19,7 +19,7 @@ object Following : Table("following") {
 }
 
 object Articles : Table("articles") {
-    val id = integer("id").primaryKey()
+    val id = integer("id").primaryKey().autoIncrement()
     val slug = varchar("slug", 255)
     val title = varchar("title", 255)
     val description = varchar("description", 255)

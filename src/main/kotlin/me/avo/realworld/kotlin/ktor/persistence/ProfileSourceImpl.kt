@@ -15,6 +15,14 @@ class ProfileSourceImpl : ProfileSource {
                 }
     }
 
+    override fun getUserProfile(userId : Int): Profile = transaction {
+        Users.select { Users.id eq userId }
+                .checkNull()
+                .let {
+                    it.toProfile(false)
+                }
+    }
+
     fun isFollowing(source: Int, target: Int): Boolean = transaction {
         Following.select { Following.sourceId eq source and (Following.targetId eq target) }
                 .let { !it.empty() }
