@@ -6,9 +6,9 @@ val tables = arrayOf(Users, Following, Articles, Tags, Comments, Favorites)
 
 object Users : Table("users") {
     val id = integer("id").primaryKey().autoIncrement()
-    val email = varchar("email", 254)
+    val email = varchar("email", 254).uniqueIndex()
     val password = varchar("password", 255)
-    val username = varchar("name", 50)
+    val username = varchar("name", 50).uniqueIndex()
     val bio = varchar("bio", 255)
     val image = varchar("image", 255).nullable()
 }
