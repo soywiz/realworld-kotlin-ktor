@@ -1,6 +1,6 @@
 package me.avo.realworld.kotlin.ktor.data
 
-import org.jetbrains.ktor.util.AttributeKey
+import io.ktor.util.*
 
 data class User(
         val id: Int,
@@ -12,7 +12,7 @@ data class User(
         val image: String?
 ) {
 
-    fun getProfile() = Profile(username,bio,image,false)
+    fun getProfile() = Profile(username, bio, image, false)
 
     companion object {
 

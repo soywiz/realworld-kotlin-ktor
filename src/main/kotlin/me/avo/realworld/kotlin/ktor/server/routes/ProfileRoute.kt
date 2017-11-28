@@ -1,12 +1,10 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
-import me.avo.realworld.kotlin.ktor.persistence.ProfileSource
-import me.avo.realworld.kotlin.ktor.persistence.ProfileSourceImpl
-import me.avo.realworld.kotlin.ktor.server.optionalLogin
-import me.avo.realworld.kotlin.ktor.server.requireLogin
-import org.jetbrains.ktor.application.ApplicationCall
-import org.jetbrains.ktor.response.respond
-import org.jetbrains.ktor.routing.*
+import io.ktor.application.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import me.avo.realworld.kotlin.ktor.persistence.*
+import me.avo.realworld.kotlin.ktor.server.*
 
 fun Route.profile() = route("profiles") {
     val profileSource: ProfileSource = ProfileSourceImpl()

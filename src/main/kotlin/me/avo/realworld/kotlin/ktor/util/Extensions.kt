@@ -1,9 +1,8 @@
 package me.avo.realworld.kotlin.ktor.util
 
-import com.github.salomonbrys.kotson.jsonArray
-import com.github.salomonbrys.kotson.jsonObject
-import me.avo.realworld.kotlin.ktor.data.User
-import org.jetbrains.ktor.application.ApplicationCall
+import com.github.salomonbrys.kotson.*
+import io.ktor.application.*
+import me.avo.realworld.kotlin.ktor.data.*
 
 val ApplicationCall.user: User? get() = attributes.getOrNull(User.key)
 

@@ -1,6 +1,6 @@
 package me.avo.realworld.kotlin.ktor.data
 
-import org.jetbrains.ktor.util.ValuesMap
+import io.ktor.util.*
 
 data class ArticleQuery(
         val tag: String?,

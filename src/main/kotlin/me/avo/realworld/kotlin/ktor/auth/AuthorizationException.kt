@@ -1,6 +1,6 @@
 package me.avo.realworld.kotlin.ktor.auth
 
-import org.jetbrains.ktor.http.HttpStatusCode
+import io.ktor.http.*
 
 class AuthorizationException : Exception() {
 

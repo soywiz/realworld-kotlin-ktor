@@ -1,15 +1,13 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
-import me.avo.realworld.kotlin.ktor.auth.LoginHandler
-import me.avo.realworld.kotlin.ktor.data.LoginCredentials
-import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
-import me.avo.realworld.kotlin.ktor.data.User
-import me.avo.realworld.kotlin.ktor.persistence.UserSource
-import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
-import me.avo.realworld.kotlin.ktor.server.requireLogin
-import org.jetbrains.ktor.request.receive
-import org.jetbrains.ktor.response.respond
-import org.jetbrains.ktor.routing.*
+import io.ktor.application.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import me.avo.realworld.kotlin.ktor.auth.*
+import me.avo.realworld.kotlin.ktor.data.*
+import me.avo.realworld.kotlin.ktor.persistence.*
+import me.avo.realworld.kotlin.ktor.server.*
 
 fun Route.user(userSource: UserSource) {
 

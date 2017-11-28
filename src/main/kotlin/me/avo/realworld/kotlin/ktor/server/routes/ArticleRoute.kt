@@ -1,14 +1,12 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
-import me.avo.realworld.kotlin.ktor.data.Article
-import me.avo.realworld.kotlin.ktor.data.ArticleQuery
-import me.avo.realworld.kotlin.ktor.persistence.ArticleSource
-import me.avo.realworld.kotlin.ktor.persistence.ArticleSourceImpl
-import me.avo.realworld.kotlin.ktor.server.optionalLogin
-import me.avo.realworld.kotlin.ktor.server.requireLogin
-import org.jetbrains.ktor.request.receive
-import org.jetbrains.ktor.response.respond
-import org.jetbrains.ktor.routing.*
+import io.ktor.application.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import me.avo.realworld.kotlin.ktor.data.*
+import me.avo.realworld.kotlin.ktor.persistence.*
+import me.avo.realworld.kotlin.ktor.server.*
 
 fun Route.article() = route("articles") {
     val articleSource: ArticleSource = ArticleSourceImpl()

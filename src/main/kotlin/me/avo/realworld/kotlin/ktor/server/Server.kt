@@ -1,22 +1,15 @@
 package me.avo.realworld.kotlin.ktor.server
 
-import me.avo.realworld.kotlin.ktor.auth.AuthenticationException
-import me.avo.realworld.kotlin.ktor.auth.AuthorizationException
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.gson.*
+import io.ktor.locations.*
+import io.ktor.routing.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import me.avo.realworld.kotlin.ktor.data.*
-import me.avo.realworld.kotlin.ktor.persistence.Setup
-import me.avo.realworld.kotlin.ktor.util.serialization.register
-import me.avo.realworld.kotlin.ktor.util.toJson
-import org.jetbrains.ktor.application.install
-import org.jetbrains.ktor.features.CallLogging
-import org.jetbrains.ktor.features.DefaultHeaders
-import org.jetbrains.ktor.features.StatusPages
-import org.jetbrains.ktor.gson.GsonSupport
-import org.jetbrains.ktor.host.embeddedServer
-import org.jetbrains.ktor.http.HttpStatusCode
-import org.jetbrains.ktor.locations.Locations
-import org.jetbrains.ktor.netty.Netty
-import org.jetbrains.ktor.response.respond
-import org.jetbrains.ktor.routing.Routing
+import me.avo.realworld.kotlin.ktor.persistence.*
+import me.avo.realworld.kotlin.ktor.util.serialization.*
 
 fun startServer() = embeddedServer(Netty, 5000) {
     Setup()
@@ -33,17 +26,7 @@ fun startServer() = embeddedServer(Netty, 5000) {
     }
 
     install(StatusPages) {
-        exception<Throwable> {
-            val status = when (it) {
-                is AuthenticationException -> it.status
-                is AuthorizationException -> it.status
-                else -> HttpStatusCode.InternalServerError
-            }
-            println(it)
-            it.stackTrace.forEach(::println)
-            call.response.status(status)
-            call.respond(it.toJson())
-        }
+        setup()
     }
 
     install(Routing) {
