@@ -1,6 +1,9 @@
 package me.avo.realworld.kotlin.ktor.auth
 
+import com.auth0.jwt.*
+import com.auth0.jwt.algorithms.*
 import io.jsonwebtoken.*
+import io.ktor.auth.jwt.*
 import me.avo.realworld.kotlin.ktor.data.*
 import java.util.*
 
@@ -8,25 +11,25 @@ object JwtConfig {
 
     private const val secret = "xE1x1o1x8qflc1iYtcRd"
     private const val issuer = "thinkster.io"
+    const val realm = issuer
     private const val validityInMs = 36_000_000 // 10 hours
+    private val algorithm = Algorithm.HMAC256(secret)
 
-    fun parse(token: String): String = Jwts.parser()
-            .setSigningKey(secret)
-            .parseClaimsJws(token)
-            .body
-            .let { it["email"].toString() }
+    val verifier: JWTVerifier = JWT
+            .require(algorithm)
+            .withIssuer(issuer)
+            .build()
 
     /**
      * Produce a token for this combination of User and Account
      */
-    fun makeToken(user: User): String = Jwts.builder()
-            .setSubject("Authentication")
-            .setIssuer(issuer)
-            .claim("id", user.id)
-            .claim("email", user.email)
-            //.setExpiration(getExpiration())
-            .signWith(SignatureAlgorithm.HS256, secret)
-            .compact()
+    fun makeToken(user: User): String = JWT.create()
+            .withSubject("Authentication")
+            .withIssuer(issuer)
+            .withClaim("id", user.id)
+            .withClaim("email", user.email)
+            .withExpiresAt(getExpiration())
+            .sign(algorithm)
 
     /**
      * Calculate the expiration Date based on current time + the given validity

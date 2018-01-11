@@ -31,7 +31,7 @@ fun Route.user(userSource: UserSource) {
 
         get {
             val (_, email, _, token) = requireLogin()
-            val user = userSource.findUser(email).copy(token = token)
+            val user = userSource.findUser(email)?.copy(token = token) ?: throw AuthenticationException.USER_NOT_FOUND
             call.respond(user)
         }
 

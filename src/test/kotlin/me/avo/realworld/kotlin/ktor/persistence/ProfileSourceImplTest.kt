@@ -10,7 +10,7 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ProfileSourceImplTest : TestEnvironment {
 
-    val ds: ProfileSource = ProfileSourceImpl()
+    private val ds: ProfileSource = ProfileSourceImpl()
 
     @Test
     fun getProfile() = availableUsers.forEach {

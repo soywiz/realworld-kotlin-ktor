@@ -11,7 +11,7 @@ class LoginHandler {
     private val db: UserSource = UserSourceImpl()
 
     fun login(credentials: LoginCredentials): User = credentials.let { (email, password) ->
-        val user = db.findUser(email)
+        val user = db.findUser(email) ?: throw AuthenticationException.USER_NOT_FOUND
         BcryptHasher.checkPassword(password, user)
         val token = JwtConfig.makeToken(user)
         return user.copy(token = token)
@@ -27,7 +27,7 @@ class LoginHandler {
 
     fun updateUser(new: User, current: User): User {
         val final = if (new.password != null) new.copy(password = BcryptHasher.hashPassword(new.password)) else new
-        return db.updateUser(final, current)
+        return db.updateUser(final, current) ?: throw AuthenticationException.USER_NOT_FOUND
     }
 
 }

@@ -1,5 +1,6 @@
 package me.avo.realworld.kotlin.ktor.data
 
+import io.ktor.auth.*
 import io.ktor.util.*
 
 data class User(
@@ -10,7 +11,7 @@ data class User(
         val username: String,
         val bio: String,
         val image: String?
-) {
+): Principal {
 
     fun getProfile() = Profile(username, bio, image, false)
 

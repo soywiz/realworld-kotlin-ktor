@@ -113,11 +113,5 @@ private fun findArticle(where: () -> Op<Boolean>) = transaction {
     override fun getFeed(): List<ArticleDetails> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-    @Deprecated("This Function has been moved to TagSource Class")
-    override fun getTags() = transaction {
-        Tags.slice(Tags.tag)
-                .selectAll()
-                .map { it[Tags.tag] }
-    }
 
 }

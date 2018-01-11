@@ -16,13 +16,15 @@ fun startServer() = embeddedServer(Netty, 5000) {
     install(CallLogging)
     install(DefaultHeaders)
     install(Locations)
-    install(GsonSupport) {
-        serializeNulls()
-        register<LoginCredentials>()
-        register<RegistrationDetails>()
-        register<User>()
-        register<ArticleDetails>()
-        register<Profile>()
+    install(ContentNegotiation) {
+        gson {
+            serializeNulls()
+            register<LoginCredentials>()
+            register<RegistrationDetails>()
+            register<User>()
+            register<ArticleDetails>()
+            register<Profile>()
+        }
     }
 
     install(StatusPages) {

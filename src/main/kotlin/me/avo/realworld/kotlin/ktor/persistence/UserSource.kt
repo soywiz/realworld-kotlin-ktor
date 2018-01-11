@@ -5,10 +5,10 @@ import me.avo.realworld.kotlin.ktor.data.User
 
 interface UserSource {
 
-    fun findUser(email: String) : User
+    fun findUser(email: String) : User?
 
     fun insertUser(details: RegistrationDetails): Int
 
-    fun updateUser(new: User, current: User): User
+    fun updateUser(new: User, current: User): User?
 
 }

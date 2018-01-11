@@ -2,8 +2,13 @@ package me.avo.realworld.kotlin.ktor.auth
 
 import io.ktor.http.*
 
-class AuthenticationException : Exception() {
+sealed class AuthenticationException : Exception() {
 
-    val status = HttpStatusCode.Unauthorized
+    abstract val status: HttpStatusCode
+
+    object USER_NOT_FOUND: AuthenticationException() {
+        override val status = HttpStatusCode.NotFound
+    }
+
 
 }

@@ -2,8 +2,8 @@ group 'me.avo'
 version '1.0'
 
 buildscript {
-    ext.kotlin_version = '1.2.0'
-    ext.ktor_version = '0.9.0'
+    ext.kotlin_version = '1.2.10'
+    ext.ktor_version = '0.9.1-alpha-8'
 
     repositories {
         mavenCentral()
@@ -52,6 +52,7 @@ dependencies {
 
     compile group: "io.ktor", name: "ktor-server-core", version: ktor_version
     compile group: "io.ktor", name: "ktor-server-netty", version: ktor_version
+    compile "io.ktor:ktor-auth-jwt:$ktor_version"
     compile "io.ktor:ktor-gson:$ktor_version"
     compile "io.ktor:ktor-locations:$ktor_version"
 
@@ -59,11 +60,11 @@ dependencies {
     compile group: "org.mindrot", name: "jbcrypt", version: "0.4"
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile group: "org.slf4j", name: "slf4j-simple", version: "1.7.25"
-    compile 'org.jetbrains.exposed:exposed:0.8.7'
+    compile 'org.jetbrains.exposed:exposed:0.9.1'
     compile group: 'com.h2database', name: 'h2', version: '1.4.196'
 
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.2'
-    testCompile group: 'org.amshove.kluent', name: 'kluent', version: '1.30'
+    testCompile group: 'org.amshove.kluent', name: 'kluent', version: '1.33'
     testCompile "io.ktor:ktor-server-test-host:$ktor_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.2"

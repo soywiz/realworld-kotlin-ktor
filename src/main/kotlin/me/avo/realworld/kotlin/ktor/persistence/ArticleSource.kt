@@ -26,6 +26,4 @@ interface ArticleSource {
 
     fun unfavorite(slug: String): ArticleDetails
 
-    fun getTags(): List<String>
-
 }
