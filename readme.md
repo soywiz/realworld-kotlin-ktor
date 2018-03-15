@@ -12,6 +12,9 @@ We've gone to great lengths to adhere to the **[Kotlin-Ktor](https://github.com/
 
 For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
+# Status
+
+> Currently awaiting changes to the ktor auth module
 
 # How it works
 
@@ -20,4 +23,3 @@ For more information on how to this works with other frontends/backends, head ov
 # Getting started
 
 > npm install, npm start, etc.
-
