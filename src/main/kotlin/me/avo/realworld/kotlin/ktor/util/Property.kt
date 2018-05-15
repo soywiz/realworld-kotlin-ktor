@@ -10,6 +10,6 @@ object Property {
         }
     }
 
-    operator fun get(key: String) = props[key].toString()
+    operator fun get(key: String): String = props[key].toString()
 
 }

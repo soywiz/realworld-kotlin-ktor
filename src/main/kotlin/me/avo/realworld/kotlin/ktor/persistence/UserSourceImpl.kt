@@ -25,7 +25,7 @@ class UserSourceImpl : UserSource {
             it[Users.username] = details.username
             it[Users.bio] = ""
             it[Users.image] = null
-        } get Users.id
+        } get Users.id ?: TODO()
     }
 
     override fun updateUser(new: User, current: User): User? = transaction {

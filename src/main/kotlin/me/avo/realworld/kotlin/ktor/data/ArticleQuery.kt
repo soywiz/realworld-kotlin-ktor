@@ -1,25 +1,21 @@
 package me.avo.realworld.kotlin.ktor.data
 
-import io.ktor.util.*
+import io.ktor.http.Parameters
 
 data class ArticleQuery(
-        val tag: String?,
-        val author: String?,
-        val favoritedBy: String?,
-        val limit: Int,
-        val offset: Int
+    val tag: String?,
+    val author: String?,
+    val favoritedBy: String?,
+    val limit: Int,
+    val offset: Int
 ) {
 
-    companion object {
-
-        fun fromParameter(map: ValuesMap) = ArticleQuery(
-                tag = map["tag"],
-                author = map["author"],
-                favoritedBy = map["favorited"],
-                limit = map["limit"]?.toInt() ?: 20,
-                offset = map["offset"]?.toInt() ?: 0
-        )
-
-    }
+    constructor(map: Parameters) : this(
+        tag = map["tag"],
+        author = map["author"],
+        favoritedBy = map["favorited"],
+        limit = map["limit"]?.toInt() ?: 20,
+        offset = map["offset"]?.toInt() ?: 0
+    )
 
 }

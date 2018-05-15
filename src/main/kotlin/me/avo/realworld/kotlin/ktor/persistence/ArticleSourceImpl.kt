@@ -52,7 +52,7 @@ class ArticleSourceImpl : ArticleSource {
             it[Articles.createdAt] = details11.createdAt
             it[Articles.updatedAt] = details11.updatedAt
             it[Articles.authorId] = user.id
-        } get Articles.id
+        } get Articles.id ?: TODO()
 
         insertTags(id, details11.tagList)
 //        ArticleDetails(id, slug, title, description, body, tagList, createdAt, updatedAt, false, 0, TODO())
