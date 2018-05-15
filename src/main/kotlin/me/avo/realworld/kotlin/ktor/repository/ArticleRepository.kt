@@ -1,8 +1,8 @@
-package me.avo.realworld.kotlin.ktor.persistence
+package me.avo.realworld.kotlin.ktor.repository
 
-import me.avo.realworld.kotlin.ktor.data.*
+import me.avo.realworld.kotlin.ktor.model.*
 
-interface ArticleSource {
+interface ArticleRepository {
 
     fun getArticles(query: ArticleQuery): List<ArticleDetails>
 

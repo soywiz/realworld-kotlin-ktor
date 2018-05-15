@@ -1,11 +1,12 @@
 package me.avo.realworld.kotlin.ktor.server
 
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.response.*
-import me.avo.realworld.kotlin.ktor.auth.*
-import me.avo.realworld.kotlin.ktor.util.*
+import io.ktor.application.call
+import io.ktor.features.StatusPages
+import io.ktor.http.HttpStatusCode
+import io.ktor.response.respond
+import me.avo.realworld.kotlin.ktor.auth.AuthenticationException
+import me.avo.realworld.kotlin.ktor.auth.AuthorizationException
+import me.avo.realworld.kotlin.ktor.util.toJson
 
 fun StatusPages.Configuration.setup() {
 

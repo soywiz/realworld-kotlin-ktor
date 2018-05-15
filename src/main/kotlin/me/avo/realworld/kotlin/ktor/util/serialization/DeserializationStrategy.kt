@@ -3,7 +3,7 @@ package me.avo.realworld.kotlin.ktor.util.serialization
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 
-class DeserialStrategy : ExclusionStrategy {
+class DeserializationStrategy : ExclusionStrategy {
 
     override fun shouldSkipClass(clazz: Class<*>): Boolean {
         return false

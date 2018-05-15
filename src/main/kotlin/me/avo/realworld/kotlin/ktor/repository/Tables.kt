@@ -1,8 +1,15 @@
-package me.avo.realworld.kotlin.ktor.persistence
+package me.avo.realworld.kotlin.ktor.repository
 
 import org.jetbrains.exposed.sql.Table
 
-val tables = arrayOf(Users, Following, Articles, Tags, Comments, Favorites)
+val tables = arrayOf(
+    Users,
+    Following,
+    Articles,
+    Tags,
+    Comments,
+    Favorites
+)
 
 object Users : Table("users") {
     val id = integer("id").primaryKey().autoIncrement()

@@ -1,21 +1,25 @@
 package me.avo.realworld.kotlin.ktor.persistence
 
 import me.avo.realworld.kotlin.ktor.*
+import me.avo.realworld.kotlin.ktor.repository.ProfileRepository
+import me.avo.realworld.kotlin.ktor.repository.ProfileRepositoryImpl
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class ProfileSourceImplTest : TestEnvironment {
+internal class ProfileRepositoryImplTest : TestEnvironment {
 
-    private val ds: ProfileSource = ProfileSourceImpl()
+    private val ds: ProfileRepository =
+        ProfileRepositoryImpl()
 
     @Test
     fun getProfile() = availableUsers.forEach {
         ds.getProfile(it.username, null).let { pro ->
-            pro.username shouldEqualTo it.username
+            pro.username shouldBeEqualTo it.username
             pro.following shouldEqualTo false
         }
     }
@@ -27,7 +31,7 @@ internal class ProfileSourceImplTest : TestEnvironment {
 
         ds.follow(source.getId(), target.username).apply {
             following shouldBe true
-            username shouldEqualTo target.username
+            username shouldBeEqualTo target.username
         }
     }
 
@@ -45,12 +49,12 @@ internal class ProfileSourceImplTest : TestEnvironment {
         val target = followTarget
         ds.getProfile(target.username, source.getId()).let {
             it.following shouldBe true
-            it.username shouldEqualTo target.username
+            it.username shouldBeEqualTo target.username
         }
 
         ds.unfollow(source.getId(), target.username).let {
             it.following shouldBe false
-            it.username shouldEqualTo target.username
+            it.username shouldBeEqualTo target.username
         }
 
     }

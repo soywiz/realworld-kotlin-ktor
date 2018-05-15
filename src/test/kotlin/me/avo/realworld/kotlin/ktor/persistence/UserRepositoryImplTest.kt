@@ -1,22 +1,29 @@
 package me.avo.realworld.kotlin.ktor.persistence
 
-import me.avo.realworld.kotlin.ktor.*
-import me.avo.realworld.kotlin.ktor.auth.*
-import me.avo.realworld.kotlin.ktor.data.*
+import me.avo.realworld.kotlin.ktor.auth.BcryptHasher
+import me.avo.realworld.kotlin.ktor.availableUsers
+import me.avo.realworld.kotlin.ktor.hashedTestPassword
+import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
+import me.avo.realworld.kotlin.ktor.model.User
+import me.avo.realworld.kotlin.ktor.repository.UserRepository
+import me.avo.realworld.kotlin.ktor.repository.UserRepositoryImpl
+import me.avo.realworld.kotlin.ktor.shouldNotBeNull
+import me.avo.realworld.kotlin.ktor.testPassword
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldThrow
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class UserSourceImplTest : TestEnvironment {
+internal class UserRepositoryImplTest : TestEnvironment {
 
-    private val ds: UserSource = UserSourceImpl()
+    private val ds: UserRepository = UserRepositoryImpl()
 
     @Test
     fun find() = availableUsers.forEach {
         val user = ds.findUser(it.email).shouldNotBeNull()
-        user.username shouldEqualTo it.username
+        user.username shouldBeEqualTo it.username
         BcryptHasher.checkPassword(testPassword, user)
     }
 
@@ -31,7 +38,7 @@ internal class UserSourceImplTest : TestEnvironment {
         RegistrationDetails("another", "i@me.you", hashedTestPassword).apply {
             ds.insertUser(this)
             val user = ds.findUser(email).shouldNotBeNull()
-            user.username shouldEqualTo username
+            user.username shouldBeEqualTo username
             BcryptHasher.checkPassword(testPassword, user)
         }
     }
@@ -50,10 +57,10 @@ internal class UserSourceImplTest : TestEnvironment {
     }
 
     private fun User.compare(other: User, rawPassword: String) {
-        email shouldEqualTo other.email
-        username shouldEqualTo other.username
+        email shouldBeEqualTo other.email
+        username shouldBeEqualTo other.username
         BcryptHasher.checkPassword(rawPassword, this)
-        bio shouldEqualTo other.bio
+        bio shouldBeEqualTo other.bio
         image shouldEqual other.image
     }
 

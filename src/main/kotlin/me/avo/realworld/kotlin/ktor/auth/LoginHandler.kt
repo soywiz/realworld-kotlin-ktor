@@ -1,14 +1,15 @@
 package me.avo.realworld.kotlin.ktor.auth
 
-import me.avo.realworld.kotlin.ktor.data.LoginCredentials
-import me.avo.realworld.kotlin.ktor.data.RegistrationDetails
-import me.avo.realworld.kotlin.ktor.data.User
-import me.avo.realworld.kotlin.ktor.persistence.UserSource
-import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
+import me.avo.realworld.kotlin.ktor.model.LoginCredentials
+import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
+import me.avo.realworld.kotlin.ktor.model.User
+import me.avo.realworld.kotlin.ktor.repository.UserRepository
+import me.avo.realworld.kotlin.ktor.repository.UserRepositoryImpl
 
 class LoginHandler {
 
-    private val db: UserSource = UserSourceImpl()
+    private val db: UserRepository =
+        UserRepositoryImpl()
 
     fun login(credentials: LoginCredentials): User = credentials.let { (email, password) ->
         val user = db.findUser(email) ?: throw AuthenticationException.USER_NOT_FOUND

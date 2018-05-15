@@ -2,7 +2,7 @@ package me.avo.realworld.kotlin.ktor.util.serialization
 
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
-import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.model.User
 
 class SerialStrategy : ExclusionStrategy {
 

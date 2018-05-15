@@ -1,12 +1,12 @@
-package me.avo.realworld.kotlin.ktor.persistence
+package me.avo.realworld.kotlin.ktor.repository
 
-import me.avo.realworld.kotlin.ktor.data.Profile
+import me.avo.realworld.kotlin.ktor.model.Profile
 
-interface ProfileSource {
+interface ProfileRepository {
 
     fun getProfile(username: String, currentId: Int?): Profile
 
-    fun getUserProfile(userId : Int): Profile
+    fun getUserProfile(userId: Int): Profile
 
     fun follow(currentId: Int, username: String): Profile
 

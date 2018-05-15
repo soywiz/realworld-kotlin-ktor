@@ -1,4 +1,4 @@
-package me.avo.realworld.kotlin.ktor.data
+package me.avo.realworld.kotlin.ktor.model
 
 import io.ktor.http.Parameters
 

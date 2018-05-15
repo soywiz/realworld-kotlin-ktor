@@ -1,15 +1,18 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
-import io.ktor.application.*
-import io.ktor.request.*
-import io.ktor.response.*
+import io.ktor.application.call
+import io.ktor.request.receive
+import io.ktor.response.respond
 import io.ktor.routing.*
-import me.avo.realworld.kotlin.ktor.auth.*
-import me.avo.realworld.kotlin.ktor.data.*
-import me.avo.realworld.kotlin.ktor.persistence.*
-import me.avo.realworld.kotlin.ktor.server.*
+import me.avo.realworld.kotlin.ktor.auth.AuthenticationException
+import me.avo.realworld.kotlin.ktor.auth.LoginHandler
+import me.avo.realworld.kotlin.ktor.model.LoginCredentials
+import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
+import me.avo.realworld.kotlin.ktor.model.User
+import me.avo.realworld.kotlin.ktor.repository.UserRepository
+import me.avo.realworld.kotlin.ktor.server.requireLogin
 
-fun Route.user(userSource: UserSource) {
+fun Route.user(userRepository: UserRepository) {
 
     route("users") {
 
@@ -31,7 +34,7 @@ fun Route.user(userSource: UserSource) {
 
         get {
             val (_, email, _, token) = requireLogin()
-            val user = userSource.findUser(email)?.copy(token = token) ?: throw AuthenticationException.USER_NOT_FOUND
+            val user = userRepository.findUser(email)?.copy(token = token) ?: throw AuthenticationException.USER_NOT_FOUND
             call.respond(user)
         }
 

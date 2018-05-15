@@ -1,6 +1,6 @@
 package me.avo.realworld.kotlin.ktor.auth
 
-import me.avo.realworld.kotlin.ktor.data.User
+import me.avo.realworld.kotlin.ktor.model.User
 import org.mindrot.jbcrypt.BCrypt
 
 object BcryptHasher {

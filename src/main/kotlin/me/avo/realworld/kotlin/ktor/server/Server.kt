@@ -13,10 +13,8 @@ import io.ktor.routing.Routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import me.avo.realworld.kotlin.ktor.auth.JwtConfig
-import me.avo.realworld.kotlin.ktor.data.*
-import me.avo.realworld.kotlin.ktor.persistence.Setup
-import me.avo.realworld.kotlin.ktor.persistence.UserSource
-import me.avo.realworld.kotlin.ktor.persistence.UserSourceImpl
+import me.avo.realworld.kotlin.ktor.model.*
+import me.avo.realworld.kotlin.ktor.repository.*
 import me.avo.realworld.kotlin.ktor.util.serialization.register
 
 fun startServer() = embeddedServer(Netty, 5000) {
@@ -39,9 +37,12 @@ fun startServer() = embeddedServer(Netty, 5000) {
         setup()
     }
 
-    val userSource: UserSource = UserSourceImpl()
+    val articleRepository: ArticleRepository = ArticleRepositoryImpl()
+    val profileRepository: ProfileRepository = ProfileRepositoryImpl()
+    val userRepository: UserRepository = UserRepositoryImpl()
+
     install(Routing) {
-        setup(userSource)
+        setup(userRepository, articleRepository, profileRepository)
     }
 
     install(Authentication) {
@@ -50,7 +51,7 @@ fun startServer() = embeddedServer(Netty, 5000) {
             realm = JwtConfig.realm
             validate {
                 val email = it.payload.getClaim("email").toString()
-                userSource.findUser(email)?.let { user ->
+                userRepository.findUser(email)?.let { user ->
                     val token = JwtConfig.makeToken(user)
                     user.copy(token = token)
                 }

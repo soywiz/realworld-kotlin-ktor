@@ -1,10 +1,9 @@
 package me.avo.realworld.kotlin.ktor.auth
 
-import com.auth0.jwt.*
-import com.auth0.jwt.algorithms.*
-import io.jsonwebtoken.*
-import io.ktor.auth.jwt.*
-import me.avo.realworld.kotlin.ktor.data.*
+import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
+import com.auth0.jwt.algorithms.Algorithm
+import me.avo.realworld.kotlin.ktor.model.User
 import java.util.*
 
 object JwtConfig {
@@ -16,20 +15,20 @@ object JwtConfig {
     private val algorithm = Algorithm.HMAC256(secret)
 
     val verifier: JWTVerifier = JWT
-            .require(algorithm)
-            .withIssuer(issuer)
-            .build()
+        .require(algorithm)
+        .withIssuer(issuer)
+        .build()
 
     /**
      * Produce a token for this combination of User and Account
      */
     fun makeToken(user: User): String = JWT.create()
-            .withSubject("Authentication")
-            .withIssuer(issuer)
-            .withClaim("id", user.id)
-            .withClaim("email", user.email)
-            .withExpiresAt(getExpiration())
-            .sign(algorithm)
+        .withSubject("Authentication")
+        .withIssuer(issuer)
+        .withClaim("id", user.id)
+        .withClaim("email", user.email)
+        .withExpiresAt(getExpiration())
+        .sign(algorithm)
 
     /**
      * Calculate the expiration Date based on current time + the given validity

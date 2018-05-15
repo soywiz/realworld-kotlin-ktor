@@ -1,8 +1,8 @@
 package me.avo.realworld.kotlin.ktor
 
 import me.avo.realworld.kotlin.ktor.auth.*
-import me.avo.realworld.kotlin.ktor.data.*
-import me.avo.realworld.kotlin.ktor.persistence.*
+import me.avo.realworld.kotlin.ktor.model.*
+import me.avo.realworld.kotlin.ktor.repository.*
 import org.amshove.kluent.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.*
@@ -22,19 +22,21 @@ class TableSetup {
 
 fun setupEnvironment() {
     Setup()
-    val articleSource: ArticleSource = ArticleSourceImpl()
-    val userSource: UserSource = UserSourceImpl()
+    val articleRepository: ArticleRepository =
+        ArticleRepositoryImpl()
+    val userRepository: UserRepository =
+        UserRepositoryImpl()
     transaction {
         SchemaUtils.drop(*tables)
         SchemaUtils.create(*tables)
         availableUsers.forEach(RegistrationDetails::insert)
         followSource follow followTarget
 
-        val user = userSource.findUser(details.email).shouldNotBeNull()
+        val user = userRepository.findUser(details.email).shouldNotBeNull()
 
         user.email.shouldNotBeBlank()
         availableArticles.forEach {
-            articleSource.insertArticle(user, it)
+            articleRepository.insertArticle(user, it)
         }
 
 
@@ -44,17 +46,17 @@ fun setupEnvironment() {
 }
 
 private fun RegistrationDetails.insert() {
-    val id = UserSourceImpl().insertUser(this)
+    val id = UserRepositoryImpl().insertUser(this)
     availableMap.put(this, id)
 }
 
 private fun ArticleDetails.insert() {
-    //ArticleSourceImpl().insertArticle()
+    //ArticleRepositoryImpl().insertArticle()
 }
 
 private infix fun RegistrationDetails.follow(target: RegistrationDetails) {
     val sourceId = availableMap[this]!!
-    ProfileSourceImpl().follow(sourceId, target.username)
+    ProfileRepositoryImpl().follow(sourceId, target.username)
 }
 
 fun RegistrationDetails.getId() = availableMap[this]!!
