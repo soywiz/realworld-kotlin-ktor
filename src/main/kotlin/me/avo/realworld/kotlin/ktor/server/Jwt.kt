@@ -5,12 +5,11 @@ import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.pipeline.PipelineContext
 import io.ktor.routing.Route
-import me.avo.realworld.kotlin.ktor.auth.AuthenticationException
+import me.avo.realworld.kotlin.ktor.auth.UserNotFound
 import me.avo.realworld.kotlin.ktor.model.User
 import me.avo.realworld.kotlin.ktor.util.user
 
-fun PipelineContext<*, ApplicationCall>.requireLogin(): User =
-    optionalLogin() ?: throw AuthenticationException.USER_NOT_FOUND
+fun PipelineContext<*, ApplicationCall>.requireLogin(): User = optionalLogin() ?: throw UserNotFound
 
 fun PipelineContext<*, ApplicationCall>.optionalLogin(): User? = call.user
 

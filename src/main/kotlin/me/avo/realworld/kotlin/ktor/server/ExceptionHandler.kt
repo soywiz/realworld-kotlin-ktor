@@ -16,8 +16,10 @@ fun StatusPages.Configuration.setup() {
             is AuthorizationException -> it.status
             else -> HttpStatusCode.InternalServerError
         }
-        println(it)
-        it.stackTrace.forEach(::println)
+        if (status == HttpStatusCode.InternalServerError) {
+            println(it)
+            it.stackTrace.forEach(::println)
+        }
         call.response.status(status)
         call.respond(it.toJson())
     }

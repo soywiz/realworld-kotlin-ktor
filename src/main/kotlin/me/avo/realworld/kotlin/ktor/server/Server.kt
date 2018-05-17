@@ -16,10 +16,13 @@ import me.avo.realworld.kotlin.ktor.auth.JwtConfig
 import me.avo.realworld.kotlin.ktor.model.*
 import me.avo.realworld.kotlin.ktor.repository.*
 import me.avo.realworld.kotlin.ktor.util.serialization.register
+import org.slf4j.event.Level
 
 fun startServer() = embeddedServer(Netty, 5000) {
     Setup()
-    install(CallLogging)
+    install(CallLogging) {
+        level = Level.INFO
+    }
     install(DefaultHeaders)
     install(Locations)
     install(ContentNegotiation) {
@@ -41,10 +44,6 @@ fun startServer() = embeddedServer(Netty, 5000) {
     val profileRepository: ProfileRepository = ProfileRepositoryImpl()
     val userRepository: UserRepository = UserRepositoryImpl()
 
-    install(Routing) {
-        setup(userRepository, articleRepository, profileRepository)
-    }
-
     install(Authentication) {
         jwt {
             verifier(JwtConfig.verifier)
@@ -57,6 +56,11 @@ fun startServer() = embeddedServer(Netty, 5000) {
                 }
             }
         }
+
+    }
+
+    install(Routing) {
+        setup(userRepository, articleRepository, profileRepository)
     }
 
 }.start(wait = true)

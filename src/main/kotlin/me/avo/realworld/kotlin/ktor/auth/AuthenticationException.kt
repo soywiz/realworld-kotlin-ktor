@@ -2,13 +2,8 @@ package me.avo.realworld.kotlin.ktor.auth
 
 import io.ktor.http.HttpStatusCode
 
-sealed class AuthenticationException : Exception() {
+open class AuthenticationException(val status: HttpStatusCode, override val message: String) : Exception()
 
-    abstract val status: HttpStatusCode
+val UserNotFound = AuthenticationException(HttpStatusCode.NotFound, "The specified user could not be found")
 
-    object USER_NOT_FOUND : AuthenticationException() {
-        override val status = HttpStatusCode.NotFound
-    }
-
-
-}
+val UserAlreadyExists = AuthenticationException(HttpStatusCode.Conflict, "The specified user already exists")

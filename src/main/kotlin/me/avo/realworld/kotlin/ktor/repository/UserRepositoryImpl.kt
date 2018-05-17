@@ -1,5 +1,6 @@
 package me.avo.realworld.kotlin.ktor.repository
 
+import me.avo.realworld.kotlin.ktor.auth.UserAlreadyExists
 import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.model.User
 import org.jetbrains.exposed.sql.*
@@ -20,6 +21,10 @@ class UserRepositoryImpl : UserRepository {
     fun byEmail(email: String): Op<Boolean> = Users.email eq email
 
     override fun insertUser(details: RegistrationDetails): Int = transaction {
+        val alreadyExists = Users.select { Users.email eq details.email or (Users.username eq details.username) }
+            .firstOrNull() != null
+        if (alreadyExists) throw UserAlreadyExists
+
         Users.insert {
             it[email] = details.email
             it[password] = details.password
