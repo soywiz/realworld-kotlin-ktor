@@ -10,15 +10,15 @@ import io.ktor.features.StatusPages
 import io.ktor.gson.gson
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
+import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import me.avo.realworld.kotlin.ktor.auth.JwtConfig
 import me.avo.realworld.kotlin.ktor.model.*
 import me.avo.realworld.kotlin.ktor.repository.*
 import me.avo.realworld.kotlin.ktor.util.serialization.register
 import org.slf4j.event.Level
 
-fun startServer() = embeddedServer(Netty, 5000) {
+fun startServer() = embeddedServer(CIO, 5000) {
     Setup()
     install(CallLogging) {
         level = Level.INFO
@@ -46,10 +46,29 @@ fun startServer() = embeddedServer(Netty, 5000) {
 
     install(Authentication) {
         jwt {
+            authSchemes("Token")
             verifier(JwtConfig.verifier)
             realm = JwtConfig.realm
             validate {
-                val email = it.payload.getClaim("email").toString()
+                it.payload.claims.forEach(::println)
+                val email = it.payload.getClaim("email")?.asString() ?: return@validate null
+                println("Required: $email")
+                userRepository.findUser(email)?.let { user ->
+                    val token = JwtConfig.makeToken(user)
+                    user.copy(token = token)
+                }
+            }
+        }
+
+        jwt("optional") {
+            skipWhen { true }
+            authSchemes("Token")
+            verifier(JwtConfig.verifier)
+            realm = JwtConfig.realm
+            validate {
+                it.payload.claims.forEach(::println)
+                val email = it.payload.getClaim("email")?.asString() ?: return@validate null
+                println("Optional: $email")
                 userRepository.findUser(email)?.let { user ->
                     val token = JwtConfig.makeToken(user)
                     user.copy(token = token)

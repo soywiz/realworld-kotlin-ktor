@@ -14,3 +14,4 @@ fun PipelineContext<*, ApplicationCall>.requireLogin(): User = optionalLogin() ?
 fun PipelineContext<*, ApplicationCall>.optionalLogin(): User? = call.user
 
 fun Route.jwtAuth(build: Route.() -> Unit) = authenticate(null, build = build)
+//fun Route.optionalJwtAuth(build: Route.() -> Unit) = authenticate("optional", build = build)
