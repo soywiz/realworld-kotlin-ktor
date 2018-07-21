@@ -8,8 +8,6 @@ import me.avo.realworld.kotlin.ktor.model.User
 
 val ApplicationCall.user: User? get() = authentication.principal()
 
-//infix fun <T : Any?> T.or(other: T) = this ?: other
-
 fun Throwable.toJson() = jsonObject(
     "errors" to jsonObject(
         "body" to jsonArray(message)

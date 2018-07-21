@@ -1,7 +1,6 @@
 package me.avo.realworld.kotlin.ktor.model
 
 import io.ktor.auth.Principal
-import io.ktor.util.AttributeKey
 
 data class User(
     val id: Int,
@@ -13,11 +12,8 @@ data class User(
     val image: String?
 ) : Principal {
 
-    fun getProfile() = Profile(username, bio, image, false)
-
-    companion object {
-
-        val key = AttributeKey<User>("user")
-    }
+    val profile get() = Profile(username, bio, image, false)
 
 }
+
+class UserWrapper(val user: User)

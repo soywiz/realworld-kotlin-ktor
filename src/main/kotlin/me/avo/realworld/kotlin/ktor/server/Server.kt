@@ -1,5 +1,6 @@
 package me.avo.realworld.kotlin.ktor.server
 
+import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.jwt.jwt
@@ -16,7 +17,9 @@ import me.avo.realworld.kotlin.ktor.auth.JwtConfig
 import me.avo.realworld.kotlin.ktor.repository.*
 import org.slf4j.event.Level
 
-fun startServer() = embeddedServer(CIO, 5000) {
+fun startServer() = embeddedServer(CIO, 5000) { module() }.start(wait = true)
+
+fun Application.module() {
     Setup()
     install(CallLogging) {
         level = Level.INFO
@@ -54,6 +57,4 @@ fun startServer() = embeddedServer(CIO, 5000) {
     install(Routing) {
         setup(userRepository, articleRepository, profileRepository)
     }
-
-}.start(wait = true)
-
+}

@@ -16,22 +16,21 @@ fun Routing.setup(
     userRepository: UserRepository,
     articleRepository: ArticleRepository,
     profileRepository: ProfileRepository
-) =
-    route("api") {
+) {
 
-        article(articleRepository)
-        profile(profileRepository)
-        user(userRepository)
+    article(articleRepository)
+    profile(profileRepository)
+    user(userRepository)
 
-        route("tags") {
-            val tagSource: TagSource = TagSourceImpl()
-            authenticate(optional = true) {
-                get {
-                    val user = call.user
-                    println(user)
-                    val tags = tagSource.getAllTags()
-                    call.respond(tags)
-                }
+    route("tags") {
+        val tagSource: TagSource = TagSourceImpl()
+        authenticate(optional = true) {
+            get {
+                val user = call.user
+                println(user)
+                val tags = tagSource.getAllTags()
+                call.respond(tags)
             }
         }
     }
+}
