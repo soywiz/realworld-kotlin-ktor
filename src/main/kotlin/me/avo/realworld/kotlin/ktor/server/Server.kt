@@ -9,23 +9,24 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.jackson.jackson
-import io.ktor.locations.Locations
 import io.ktor.routing.Routing
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 import me.avo.realworld.kotlin.ktor.auth.JwtConfig
 import me.avo.realworld.kotlin.ktor.repository.*
+import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 
-fun startServer() = embeddedServer(CIO, 5000) { module() }.start(wait = true)
+fun startServer() = embeddedServer(CIO, 5000) {
+    Setup()
+    module()
+}.start(wait = true)
 
 fun Application.module() {
-    Setup()
     install(CallLogging) {
         level = Level.INFO
     }
     install(DefaultHeaders)
-    install(Locations)
     install(ContentNegotiation) {
         jackson { }
     }
@@ -58,3 +59,5 @@ fun Application.module() {
         setup(userRepository, articleRepository, profileRepository)
     }
 }
+
+val serverLogger = LoggerFactory.getLogger("Server")
