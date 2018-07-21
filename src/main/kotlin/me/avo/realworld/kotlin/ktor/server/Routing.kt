@@ -10,6 +10,7 @@ import me.avo.realworld.kotlin.ktor.repository.*
 import me.avo.realworld.kotlin.ktor.server.routes.article
 import me.avo.realworld.kotlin.ktor.server.routes.profile
 import me.avo.realworld.kotlin.ktor.server.routes.user
+import me.avo.realworld.kotlin.ktor.util.user
 
 fun Routing.setup(
     userRepository: UserRepository,
@@ -24,9 +25,9 @@ fun Routing.setup(
 
         route("tags") {
             val tagSource: TagSource = TagSourceImpl()
-            authenticate("optional") {
+            authenticate(optional = true) {
                 get {
-                    val user = optionalLogin()
+                    val user = call.user
                     println(user)
                     val tags = tagSource.getAllTags()
                     call.respond(tags)

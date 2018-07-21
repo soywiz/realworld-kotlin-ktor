@@ -1,36 +1,36 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
 import me.avo.realworld.kotlin.ktor.model.Article
 import me.avo.realworld.kotlin.ktor.model.ArticleQuery
 import me.avo.realworld.kotlin.ktor.repository.ArticleRepository
-import me.avo.realworld.kotlin.ktor.server.jwtAuth
-import me.avo.realworld.kotlin.ktor.server.optionalLogin
-import me.avo.realworld.kotlin.ktor.server.requireLogin
+import me.avo.realworld.kotlin.ktor.util.user
 
 fun Route.article(articleRepository: ArticleRepository) = route("articles") {
 
-    get {
-        val user = optionalLogin()
-        val query = ArticleQuery(call.parameters)
-        val articles = articleRepository.getArticles(query)
-        call.respond(articles)
+    authenticate(optional = true) {
+        get {
+            val query = ArticleQuery(call.parameters)
+            val articles = articleRepository.getArticles(query)
+            call.respond(articles)
+        }
     }
 
-    jwtAuth {
+    authenticate {
         get("feed") {
-            val user = requireLogin()
+            val user = call.user
             TODO("Feed Articles")
         }
 
 
         post {
-            val user = requireLogin()
+            val user = call.user
             val details = call.receive<Article>()
-            val article = articleRepository.insertArticle(user, details)
+            val article = articleRepository.insertArticle(user!!, details)
             call.respond(article)
         }
     }
@@ -41,46 +41,42 @@ fun Route.article(articleRepository: ArticleRepository) = route("articles") {
             TODO("Get ArticleDetails")
         }
 
-        put {
-            requireLogin()
-            TODO("Update ArticleDetails")
-        }
-
-        delete {
-            requireLogin()
-            TODO("Delete ArticleDetails")
-        }
-
-        route("comments") {
-            post {
-                requireLogin()
-                TODO("Add Comments to an ArticleDetails")
-            }
-
-            get {
-                optionalLogin()
-                TODO("Get Comments from an ArticleDetails")
-            }
-
-            delete("{id}") {
-                requireLogin()
-                TODO("Delete Comment")
-            }
-
-        }
-
-        route("favorite") {
-            post {
-                requireLogin()
-                TODO("Favorite ArticleDetails")
+        authenticate {
+            put {
+                TODO("Update ArticleDetails")
             }
 
             delete {
-                requireLogin()
-                TODO("Unfavorite ArticleDetails")
+                TODO("Delete ArticleDetails")
+            }
+
+            route("favorite") {
+                post {
+                    TODO("Favorite ArticleDetails")
+                }
+
+                delete {
+                    TODO("Unfavorite ArticleDetails")
+                }
             }
         }
 
-    }
+        route("comments") {
+            authenticate {
+                post {
+                    TODO("Add Comments to an ArticleDetails")
+                }
 
+                delete("{id}") {
+                    TODO("Delete Comment")
+                }
+            }
+
+            authenticate(optional = true) {
+                get {
+                    TODO("Get Comments from an ArticleDetails")
+                }
+            }
+        }
+    }
 }

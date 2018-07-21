@@ -7,15 +7,13 @@ import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
-import io.ktor.gson.gson
+import io.ktor.jackson.jackson
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 import me.avo.realworld.kotlin.ktor.auth.JwtConfig
-import me.avo.realworld.kotlin.ktor.model.*
 import me.avo.realworld.kotlin.ktor.repository.*
-import me.avo.realworld.kotlin.ktor.util.serialization.register
 import org.slf4j.event.Level
 
 fun startServer() = embeddedServer(CIO, 5000) {
@@ -26,16 +24,8 @@ fun startServer() = embeddedServer(CIO, 5000) {
     install(DefaultHeaders)
     install(Locations)
     install(ContentNegotiation) {
-        gson {
-            serializeNulls()
-            register<LoginCredentials>()
-            register<RegistrationDetails>()
-            register<User>()
-            register<ArticleDetails>()
-            register<Profile>()
-        }
+        jackson { }
     }
-
     install(StatusPages) {
         setup()
     }
@@ -59,23 +49,6 @@ fun startServer() = embeddedServer(CIO, 5000) {
                 }
             }
         }
-
-        jwt("optional") {
-            skipWhen { true }
-            authSchemes("Token")
-            verifier(JwtConfig.verifier)
-            realm = JwtConfig.realm
-            validate {
-                it.payload.claims.forEach(::println)
-                val email = it.payload.getClaim("email")?.asString() ?: return@validate null
-                println("Optional: $email")
-                userRepository.findUser(email)?.let { user ->
-                    val token = JwtConfig.makeToken(user)
-                    user.copy(token = token)
-                }
-            }
-        }
-
     }
 
     install(Routing) {

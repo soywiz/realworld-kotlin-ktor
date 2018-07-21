@@ -1,6 +1,7 @@
 package me.avo.realworld.kotlin.ktor.server.routes
 
 import io.ktor.application.call
+import io.ktor.auth.authenticate
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
@@ -9,9 +10,8 @@ import me.avo.realworld.kotlin.ktor.model.LoginCredentials
 import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.model.User
 import me.avo.realworld.kotlin.ktor.repository.UserRepository
-import me.avo.realworld.kotlin.ktor.server.jwtAuth
-import me.avo.realworld.kotlin.ktor.server.requireLogin
 import me.avo.realworld.kotlin.ktor.service.AuthService
+import me.avo.realworld.kotlin.ktor.util.user
 
 fun Route.user(userRepository: UserRepository) {
     val authService = AuthService(userRepository)
@@ -31,16 +31,16 @@ fun Route.user(userRepository: UserRepository) {
         }
     }
 
-    jwtAuth {
+    authenticate {
         route("user") {
             get {
-                val (_, email, _, token) = requireLogin()
+                val (_, email, _, token) = call.user!!
                 val user = userRepository.findUser(email)?.copy(token = token) ?: throw UserNotFound
                 call.respond(user)
             }
 
             put {
-                val current = requireLogin()
+                val current = call.user!!
                 val new = call.receive<User>()
                 val updated = authService.updateUser(new, current)
                 call.respond(updated)
