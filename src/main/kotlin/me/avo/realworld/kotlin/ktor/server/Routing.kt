@@ -6,6 +6,7 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.route
+import me.avo.realworld.kotlin.ktor.model.Tags
 import me.avo.realworld.kotlin.ktor.repository.*
 import me.avo.realworld.kotlin.ktor.server.routes.article
 import me.avo.realworld.kotlin.ktor.server.routes.profile
@@ -29,7 +30,7 @@ fun Routing.setup(
                 val user = call.user
                 println(user)
                 val tags = tagSource.getAllTags()
-                call.respond(tags)
+                call.respond(Tags(tags))
             }
         }
     }

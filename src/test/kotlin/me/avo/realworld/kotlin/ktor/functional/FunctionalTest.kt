@@ -7,8 +7,10 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.*
 import me.avo.realworld.kotlin.ktor.auth.JwtConfig
+import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
 import me.avo.realworld.kotlin.ktor.model.User
 import me.avo.realworld.kotlin.ktor.repository.Setup
+import me.avo.realworld.kotlin.ktor.repository.UserRepositoryImpl
 import me.avo.realworld.kotlin.ktor.repository.tables
 import me.avo.realworld.kotlin.ktor.server.module
 import org.amshove.kluent.shouldBe
@@ -89,6 +91,14 @@ interface FunctionalTest {
     fun TestApplicationCall.checkResponseUnauthorized() = checkResponse(HttpStatusCode.Unauthorized)
     fun TestApplicationCall.checkResponseForbidden() = checkResponse(HttpStatusCode.Forbidden)
     fun TestApplicationCall.checkResponseBadRequest() = checkResponse(HttpStatusCode.BadRequest)
+
+    val userDetails get() = RegistrationDetails("johnjacob", "john@jacob.com", "johnnyjacob")
+    val userRepository get() = UserRepositoryImpl()
+
+    fun ensureUserExists(): User = userRepository.findUser(userDetails.email) ?: {
+        val userId = userRepository.insertUser(userDetails)
+        userRepository.findUser(userRepository.byId(userId))!!
+    }()
 
 }
 

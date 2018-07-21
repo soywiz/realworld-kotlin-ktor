@@ -6,3 +6,5 @@ data class Profile(
     val image: String?,
     val following: Boolean
 )
+
+class ProfileWrapper(val profile: Profile)

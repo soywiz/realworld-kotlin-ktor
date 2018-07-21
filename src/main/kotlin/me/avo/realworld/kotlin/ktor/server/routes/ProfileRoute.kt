@@ -5,6 +5,7 @@ import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.response.respond
 import io.ktor.routing.*
+import me.avo.realworld.kotlin.ktor.model.ProfileWrapper
 import me.avo.realworld.kotlin.ktor.repository.ProfileRepository
 import me.avo.realworld.kotlin.ktor.util.user
 
@@ -17,7 +18,7 @@ fun Route.profile(profileRepository: ProfileRepository) = route("profiles") {
             get {
                 val user = call.user
                 val profile = profileRepository.getProfile(call.getUsername(), user?.id)
-                call.respond(profile)
+                call.respond(ProfileWrapper(profile))
             }
         }
 
