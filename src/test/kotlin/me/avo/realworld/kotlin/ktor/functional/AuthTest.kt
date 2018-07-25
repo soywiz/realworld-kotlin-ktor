@@ -3,7 +3,6 @@ package me.avo.realworld.kotlin.ktor.functional
 import com.github.salomonbrys.kotson.obj
 import com.google.gson.JsonObject
 import io.ktor.http.HttpMethod
-import me.avo.realworld.kotlin.ktor.repository.UserRepositoryImpl
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -45,11 +44,6 @@ class AuthTest : FunctionalTest {
         body = "{\"user\":{\"email\":\"john@jacob.com\"}}",
         tokenUser = ensureUserExists()
     ) { checkUserResponse(it) }
-
-
-    private fun ensureUserDoesNotExist() {
-
-    }
 
     private fun checkUserResponse(jsonObject: JsonObject) {
         jsonObject shouldHaveOwnProperty "user"

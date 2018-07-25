@@ -1,6 +1,7 @@
 package me.avo.realworld.kotlin.ktor.functional
 
 import com.github.salomonbrys.kotson.obj
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import io.ktor.http.HttpMethod
@@ -104,4 +105,11 @@ interface FunctionalTest {
 
 fun TestApplicationResponse.getJsonBody() = content.shouldNotBeNullOrBlank().let(JsonParser()::parse).obj
 
-infix fun JsonObject.shouldHaveOwnProperty(name: String) = has(name) shouldBe true
+infix fun JsonObject.shouldHaveOwnProperty(name: String): JsonElement {
+    has(name) shouldBe true
+    return this[name]
+}
+
+infix fun JsonElement.and(block: (JsonElement) -> Unit) {
+    block(this)
+}

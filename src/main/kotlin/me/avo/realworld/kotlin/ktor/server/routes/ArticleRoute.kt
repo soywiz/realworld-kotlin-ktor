@@ -7,6 +7,7 @@ import io.ktor.response.respond
 import io.ktor.routing.*
 import me.avo.realworld.kotlin.ktor.model.Article
 import me.avo.realworld.kotlin.ktor.model.ArticleQuery
+import me.avo.realworld.kotlin.ktor.model.MultipleArticles
 import me.avo.realworld.kotlin.ktor.repository.ArticleRepository
 import me.avo.realworld.kotlin.ktor.util.user
 
@@ -16,7 +17,7 @@ fun Route.article(articleRepository: ArticleRepository) = route("articles") {
         get {
             val query = ArticleQuery(call.parameters)
             val articles = articleRepository.getArticles(query)
-            call.respond(articles)
+            call.respond(MultipleArticles(articles))
         }
     }
 
