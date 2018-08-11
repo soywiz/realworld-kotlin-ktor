@@ -11,7 +11,6 @@ import me.avo.realworld.kotlin.ktor.shouldNotBeNull
 import me.avo.realworld.kotlin.ktor.testPassword
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldThrow
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -28,9 +27,9 @@ internal class UserRepositoryImplTest : TestEnvironment {
     }
 
     @Test
-    fun `should fail when user not found`() {
+    fun `should be null when user not found`() {
         val email = "doest@not.exist"
-        { ds.findUser(email) } shouldThrow Exception::class
+        ds.findUser(email) shouldEqual null
     }
 
     @Test

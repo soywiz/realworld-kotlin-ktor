@@ -14,6 +14,7 @@ import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 import me.avo.realworld.kotlin.ktor.auth.JwtConfig
 import me.avo.realworld.kotlin.ktor.repository.*
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 
@@ -60,4 +61,4 @@ fun Application.module() {
     }
 }
 
-val serverLogger = LoggerFactory.getLogger("Server")
+val serverLogger: Logger = LoggerFactory.getLogger("Server")
