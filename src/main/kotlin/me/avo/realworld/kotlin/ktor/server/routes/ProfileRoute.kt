@@ -26,13 +26,13 @@ fun Route.profile(profileRepository: ProfileRepository) = route("profiles") {
             post("follow") {
                 val user = call.user
                 val profile = profileRepository.follow(user!!.id, call.getUsername())
-                call.respond(profile)
+                call.respond(ProfileWrapper(profile))
             }
 
             delete("follow") {
                 val user = call.user
                 val profile = profileRepository.unfollow(user!!.id, call.getUsername())
-                call.respond(profile)
+                call.respond(ProfileWrapper(profile))
             }
         }
     }

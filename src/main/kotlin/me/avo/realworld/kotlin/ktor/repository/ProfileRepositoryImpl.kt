@@ -18,9 +18,7 @@ class ProfileRepositoryImpl : ProfileRepository {
     override fun getUserProfile(userId: Int): Profile = transaction {
         Users.select { Users.id eq userId }
             .checkNull()
-            .let {
-                it.toProfile(false)
-            }
+            .toProfile(false)
     }
 
     fun isFollowing(source: Int, target: Int): Boolean = transaction {

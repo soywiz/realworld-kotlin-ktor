@@ -47,11 +47,13 @@ interface FunctionalTest {
     fun TestApplicationEngine.handleRequest(
         uri: String = rootUri,
         method: HttpMethod = HttpMethod.Get,
-        body: String? = null
+        body: String? = null,
+        block: TestApplicationRequest.() -> Unit = {}
     ) = handleRawRequest {
         this.uri = uri
         this.method = method
         body?.let { setBody(it) }
+        block()
     }
 
     fun handleRequest(
@@ -61,17 +63,12 @@ interface FunctionalTest {
         tokenUser: User? = null,
         testBlock: TestApplicationResponse.(JsonObject) -> Unit
     ) = withServer {
-        when {
-            tokenUser != null -> handleTokenRequest(tokenUser) { handleRequest(uri, method, body) }
-            else -> handleRequest(uri, method, body)
+        handleRequest(uri, method, body) {
+            if (tokenUser != null) {
+                addHeader("Authorization", "Token ${getToken(tokenUser)}")
+            }
         }
     }.checkJsonResponse { testBlock(it) }
-
-    fun TestApplicationEngine.handleTokenRequest(user: User, block: TestApplicationRequest.() -> Unit = {}) =
-        handleRawRequest {
-            addHeader("Authorization", "Token ${getToken(user)}")
-            block(this)
-        }
 
     fun TestApplicationCall.checkResponse(
         status: HttpStatusCode = HttpStatusCode.OK,
@@ -96,10 +93,11 @@ interface FunctionalTest {
     val userDetails get() = RegistrationDetails("johnjacob", "john@jacob.com", "johnnyjacob")
     val userRepository get() = UserRepositoryImpl()
 
-    fun ensureUserExists(): User = userRepository.findUser(userDetails.email) ?: {
-        val userId = userRepository.insertUser(userDetails)
-        userRepository.findUser(userRepository.byId(userId))!!
-    }()
+    fun ensureUserExists(details: RegistrationDetails = userDetails): User =
+        userRepository.findUser(details.email) ?: {
+            val userId = userRepository.insertUser(details)
+            userRepository.findUser(userRepository.byId(userId))!!
+        }()
 
 }
 

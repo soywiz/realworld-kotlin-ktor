@@ -40,7 +40,7 @@ class AuthTest : FunctionalTest {
 
     @Test fun `Update User`() = handleRequest(
         uri = rootUri,
-        method = HttpMethod.Post,
+        method = HttpMethod.Put,
         body = "{\"user\":{\"email\":\"john@jacob.com\"}}",
         tokenUser = ensureUserExists()
     ) { checkUserResponse(it) }

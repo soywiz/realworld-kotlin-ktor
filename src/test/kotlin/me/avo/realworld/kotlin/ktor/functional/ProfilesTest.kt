@@ -4,7 +4,9 @@ import com.github.salomonbrys.kotson.bool
 import com.github.salomonbrys.kotson.obj
 import com.google.gson.JsonObject
 import io.ktor.http.HttpMethod
+import me.avo.realworld.kotlin.ktor.model.RegistrationDetails
 import org.amshove.kluent.shouldEqualTo
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
@@ -12,6 +14,10 @@ import org.junit.jupiter.api.TestInstance
 class ProfilesTest : FunctionalTest {
 
     override val rootUri = "profiles"
+
+    @BeforeEach fun beforeEach() {
+        ensureUserExists(RegistrationDetails("rick", "rick@morty.com", "test"))
+    }
 
     @Test fun profile() = handleRequest(
         uri = "$rootUri/rick",
@@ -21,8 +27,7 @@ class ProfilesTest : FunctionalTest {
     @Test fun `Follow Profile`() = handleRequest(
         uri = "$rootUri/rick/follow",
         method = HttpMethod.Post,
-        tokenUser = ensureUserExists(),
-        body = "{\"user\":{\"email\":\"{{EMAIL}}\"}}"
+        tokenUser = ensureUserExists()
     ) {
         val profile = checkProfile(it)
         profile["following"].bool shouldEqualTo true

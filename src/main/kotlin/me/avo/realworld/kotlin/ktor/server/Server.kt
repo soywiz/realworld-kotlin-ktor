@@ -1,5 +1,6 @@
 package me.avo.realworld.kotlin.ktor.server
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -29,7 +30,7 @@ fun Application.module() {
     }
     install(DefaultHeaders)
     install(ContentNegotiation) {
-        jackson { }
+        jackson {}
     }
     install(StatusPages) {
         setup()

@@ -18,12 +18,12 @@ fun StatusPages.Configuration.setup() {
 
         when {
             status.value.toString().startsWith("5") -> {
-                call.respond(status, InternalServerError.toJson())
                 serverLogger.error(internal.message, internal)
+                call.respond(status, InternalServerError.toJson())
             }
             else -> {
-                call.respond(status, internal.toJson())
                 serverLogger.warn(internal.message)
+                call.respond(status, internal.toJson())
             }
         }
     }

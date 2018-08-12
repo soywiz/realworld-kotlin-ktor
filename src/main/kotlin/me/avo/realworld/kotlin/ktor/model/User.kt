@@ -1,5 +1,6 @@
 package me.avo.realworld.kotlin.ktor.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.ktor.auth.Principal
 
 data class User(
@@ -12,6 +13,7 @@ data class User(
     val image: String?
 ) : Principal {
 
+    @get:JsonIgnore
     val profile get() = Profile(username, bio, image, false)
 
 }

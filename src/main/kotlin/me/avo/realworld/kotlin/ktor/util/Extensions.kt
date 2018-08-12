@@ -12,4 +12,4 @@ fun Throwable.toJson() = jsonObject(
     "errors" to jsonObject(
         "body" to jsonArray(message)
     )
-)
+).toString()
