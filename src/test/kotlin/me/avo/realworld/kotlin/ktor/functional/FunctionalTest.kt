@@ -108,6 +108,6 @@ infix fun JsonObject.shouldHaveOwnProperty(name: String): JsonElement {
     return this[name]
 }
 
-infix fun JsonElement.and(block: (JsonElement) -> Unit) {
-    block(this)
+infix fun <T> JsonElement.and(block: (JsonElement) -> T): T {
+    return block(this)
 }

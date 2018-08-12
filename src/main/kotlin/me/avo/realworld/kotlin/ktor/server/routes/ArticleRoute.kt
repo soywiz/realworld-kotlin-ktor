@@ -70,7 +70,7 @@ fun Route.article(articleRepository: ArticleRepository) = route("articles") {
                 post {
                     val newComment = call.receive<NewComment>()
                     val slug = call.getSlug()
-                    val comment = commentRepository.addComment(newComment, slug)
+                    val comment = commentRepository.addComment(call.user!!, newComment, slug)
                     call.respond(comment)
                 }
 

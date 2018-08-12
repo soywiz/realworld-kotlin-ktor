@@ -6,7 +6,7 @@ import me.avo.realworld.kotlin.ktor.model.User
 
 interface CommentRepository {
 
-    fun addComment(comment: NewComment, slug: String): Comment
+    fun addComment(user: User, comment: NewComment, slug: String): Comment
 
     fun getComments(slug: String, user: User?): List<Comment>
 

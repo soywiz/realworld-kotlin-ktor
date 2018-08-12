@@ -47,8 +47,8 @@ object Favorites : Table("favorites") {
 }
 
 object Comments : Table("comments") {
+    val id = integer("id").primaryKey().autoIncrement()
     val article_id = integer("article_id") references Articles.id
-    val id = integer("id").primaryKey()
     val createdAt = datetime("createdAt")
     val updatedAt = datetime("updatedAt")
     val body = text("body")

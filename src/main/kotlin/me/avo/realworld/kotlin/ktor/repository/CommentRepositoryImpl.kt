@@ -1,18 +1,35 @@
 package me.avo.realworld.kotlin.ktor.repository
 
+import io.ktor.http.HttpStatusCode
 import me.avo.realworld.kotlin.ktor.model.Comment
 import me.avo.realworld.kotlin.ktor.model.NewComment
 import me.avo.realworld.kotlin.ktor.model.Profile
 import me.avo.realworld.kotlin.ktor.model.User
-import org.jetbrains.exposed.sql.Join
-import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.select
+import me.avo.realworld.kotlin.ktor.server.StatusException
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 
 class CommentRepositoryImpl : CommentRepository {
 
-    override fun addComment(comment: NewComment, slug: String): Comment {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private class ArticleNotFoundException(slug: String) :
+        StatusException("Could not find Article with slug $slug", HttpStatusCode.NotFound)
+
+    override fun addComment(user: User, comment: NewComment, slug: String): Comment = transaction {
+        val articleId = Articles
+            .slice(Articles.id)
+            .select { Articles.slug eq slug }
+            .firstOrNull()
+            ?.get(Articles.id) ?: throw ArticleNotFoundException(slug)
+        val date = DateTime()
+        val id = Comments.insert {
+            it[body] = comment.body
+            it[article_id] = articleId
+            it[createdAt] = date
+            it[updatedAt] = date
+            it[authorId] = user.id
+        } get Comments.id ?: throw Exception() // TODO improve exception
+        Comment(id, date, date, comment.body, user.profile)
     }
 
     override fun getComments(slug: String, user: User?): List<Comment> = transaction {
@@ -39,8 +56,8 @@ class CommentRepositoryImpl : CommentRepository {
             }
     }
 
-    override fun deleteComment(slug: String, id: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun deleteComment(slug: String, id: String): Unit = transaction {
+        Comments.deleteWhere { Comments.id eq id.toInt() }
     }
 
 }

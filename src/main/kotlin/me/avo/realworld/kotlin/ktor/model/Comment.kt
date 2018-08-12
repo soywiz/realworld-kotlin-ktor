@@ -10,6 +10,10 @@ data class Comment(
     val author: Profile
 )
 
-data class NewComment(val body: String)
+data class NewComment(val comment: Body) {
+    val body get() = comment.body
+}
+
+class Body(val body: String)
 
 class CommentsWrapper(val comments: List<Comment>)

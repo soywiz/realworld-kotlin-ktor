@@ -13,7 +13,7 @@ interface ArticleRepository {
 
     fun getArticle(slug: String): ArticleDetails
 
-    fun insertArticle(user: User, article: Article)
+    fun insertArticle(user: User, article: Article): ArticleDetails
 
     fun updateArticle(articleDetails: ArticleDetails): ArticleDetails?
 

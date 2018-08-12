@@ -42,7 +42,7 @@ class ArticleRepositoryImpl : ArticleRepository {
 
     }
 
-    override fun insertArticle(user: User, article: Article) = transaction {
+    override fun insertArticle(user: User, article: Article): ArticleDetails = transaction {
         val id = Articles.insert {
             it[slug] = article.slug
             it[title] = article.title
@@ -51,9 +51,22 @@ class ArticleRepositoryImpl : ArticleRepository {
             it[createdAt] = article.createdAt
             it[updatedAt] = article.updatedAt
             it[authorId] = user.id
-        } get Articles.id ?: TODO()
+        } get Articles.id ?: throw Exception("") // TODO improve exception
 
         insertTags(id, article.tagList)
+        ArticleDetails(
+            id,
+            article.slug,
+            article.title,
+            article.description,
+            article.body,
+            article.tagList,
+            article.createdAt,
+            article.updatedAt,
+            false, // TODO
+            0, // TODO
+            user.profile
+        )
     }
 
     fun insertTags(articleId: Int, tags: List<String>) = transaction {
