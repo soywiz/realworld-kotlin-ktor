@@ -1,6 +1,9 @@
 package me.avo.realworld.kotlin.ktor.repository
 
-import me.avo.realworld.kotlin.ktor.model.*
+import me.avo.realworld.kotlin.ktor.model.Article
+import me.avo.realworld.kotlin.ktor.model.ArticleDetails
+import me.avo.realworld.kotlin.ktor.model.ArticleQuery
+import me.avo.realworld.kotlin.ktor.model.User
 
 interface ArticleRepository {
 
@@ -10,17 +13,11 @@ interface ArticleRepository {
 
     fun getArticle(slug: String): ArticleDetails
 
-    fun insertArticle(user: User, details11: Article)
+    fun insertArticle(user: User, article: Article)
 
     fun updateArticle(articleDetails: ArticleDetails): ArticleDetails?
 
     fun deleteArticle(articleId: Int)
-
-    fun addComment(comment: Comment): Comment
-
-    fun getComments(slug: String): List<Comment>
-
-    fun deleteComment(slug: String, id: String)
 
     fun favorite(slug: String): ArticleDetails
 

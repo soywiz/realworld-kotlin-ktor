@@ -3,7 +3,9 @@ package me.avo.realworld.kotlin.ktor.repository
 import me.avo.realworld.kotlin.ktor.model.ArticleDetails
 import me.avo.realworld.kotlin.ktor.model.Profile
 import me.avo.realworld.kotlin.ktor.model.User
+import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 
 fun ResultRow.toUser() = User(
@@ -43,3 +45,10 @@ fun ResultRow.toArticle() = ArticleDetails(
     favoritesCount = 0,//this[Favorites.articleId.count()],
     author = ProfileRepositoryImpl().getUserProfile(this[Articles.authorId]) //ProfileRepositoryImpl().getProfile(UserRepositoryImpl().findUser(UserRepositoryImpl().byId(this[Articles.authorId])).username,null) //this.toProfile(false)
 )
+
+fun parse(vararg conditions: Op<Boolean>?): Op<Boolean>? =
+    conditions
+        .filterNotNull()
+        .let { if (it.isEmpty()) null else it }
+        ?.reduce(Op<Boolean>::and)
+

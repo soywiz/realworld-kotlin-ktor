@@ -1,6 +1,9 @@
 package me.avo.realworld.kotlin.ktor.repository
 
-import me.avo.realworld.kotlin.ktor.model.*
+import me.avo.realworld.kotlin.ktor.model.Article
+import me.avo.realworld.kotlin.ktor.model.ArticleDetails
+import me.avo.realworld.kotlin.ktor.model.ArticleQuery
+import me.avo.realworld.kotlin.ktor.model.User
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -24,10 +27,7 @@ class ArticleRepositoryImpl : ArticleRepository {
     }
 
     fun parseQuery(query: ArticleQuery): Op<Boolean> = with(SqlExpressionBuilder) {
-        listOf( //query.tag?.let { Tags.tag eq it },
-            query.author?.let { Users.username eq it })
-//                query.favoritedBy?.let { Users.username eq it and (Favorites.userId eq Users.id) })
-            .filterNotNull()
+        listOfNotNull(query.author?.let { Users.username eq it })
             .reduce { acc, op -> acc and op }
     }
 
@@ -42,20 +42,18 @@ class ArticleRepositoryImpl : ArticleRepository {
 
     }
 
-    override fun insertArticle(user: User, details11: Article) = transaction {
-        //        val (title, description, body, tagList, slug, createdAt, updatedAt) = details11
+    override fun insertArticle(user: User, article: Article) = transaction {
         val id = Articles.insert {
-            it[slug] = details11.slug
-            it[title] = details11.title
-            it[description] = details11.description
-            it[body] = details11.body
-            it[createdAt] = details11.createdAt
-            it[updatedAt] = details11.updatedAt
+            it[slug] = article.slug
+            it[title] = article.title
+            it[description] = article.description
+            it[body] = article.body
+            it[createdAt] = article.createdAt
+            it[updatedAt] = article.updatedAt
             it[authorId] = user.id
         } get Articles.id ?: TODO()
 
-        insertTags(id, details11.tagList)
-//        ArticleDetails(id, slug, title, description, body, tagList, createdAt, updatedAt, false, 0, TODO())
+        insertTags(id, article.tagList)
     }
 
     fun insertTags(articleId: Int, tags: List<String>) = transaction {
@@ -88,18 +86,6 @@ class ArticleRepositoryImpl : ArticleRepository {
     override fun deleteArticle(articleId: Int): Unit = transaction {
         Tags.deleteWhere { Tags.articleId eq articleId }
         Articles.deleteWhere { Articles.id eq articleId }
-    }
-
-    override fun addComment(comment: Comment): Comment {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getComments(slug: String): List<Comment> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun deleteComment(slug: String, id: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun favorite(slug: String): ArticleDetails {

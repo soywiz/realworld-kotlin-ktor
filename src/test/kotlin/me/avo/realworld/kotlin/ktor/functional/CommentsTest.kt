@@ -5,6 +5,8 @@ import com.github.salomonbrys.kotson.obj
 import com.github.salomonbrys.kotson.string
 import com.google.gson.JsonObject
 import io.ktor.http.HttpMethod
+import me.avo.realworld.kotlin.ktor.model.NewComment
+import me.avo.realworld.kotlin.ktor.repository.CommentRepositoryImpl
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.junit.jupiter.api.Test
@@ -28,11 +30,15 @@ class CommentsTest : FunctionalTest {
         commentCheck(it)
     }
 
-    @Test fun `Delete Comment for Article`() = handleRequest(
-        method = HttpMethod.Delete,
-        tokenUser = ensureUserExists()
-    ) {
+    @Test fun `Delete Comment for Article`() {
+        val comment = CommentRepositoryImpl().addComment(NewComment("test"), "x")
+        handleRequest(
+            uri = "$rootUri/${comment.id}",
+            method = HttpMethod.Delete,
+            tokenUser = ensureUserExists()
+        ) {
 
+        }
     }
 
     private fun commentCheck(json: JsonObject) = json shouldHaveOwnProperty "comments" and {
